@@ -1,47 +1,44 @@
 <?php
     include("MySQLConnector.php");
+    $myDatabase = MySQLConnector("34.87.91.113", "root", "031961698", "MyDatabase");
     function checkIfAccountExist($username){
-        $AccountDB = MySQLConnector("localhost", "root", "031961698", "mydatabase");
-        $stmt = "select username from account";
-        $result = $AccountDB->query($stmt);
+        $accountDB = $GLOBALS['myDatabase'];
+;       $stmt = "select username from account";
+        $result = $accountDB->query($stmt);
         while ($row = $result->fetch_assoc()){
             if (!strcmp(strtolower($row['username']), strtolower($username))){
-                $AccountDB->close();
+                $result->close();
                 return true;
             }
         }
-        $AccountDB->close();
+        $result->close();
         return false;
     }
-    function createAccount($username, $password, $name, $lastname, $age, $email, $address, $tel){
-        $AccountDB = MySQLConnector("localhost", "root", "031961698", "mydatabase");
-        $stmt = $AccountDB->prepare("insert into account(username, password, name, lastname, age, email,
-        address, telephone, type) values(?,?,?,?,?,?,?,?,?)");
-        $type = "user";
-        $stmt->bind_param("ssssdssss", $username, $password, $name, $lastname, $age, $email, $address, $tel, $type);
+    function createAccount($username, $password, $firstname, $lastname, $email, $tel){
+        $accountDB = $GLOBALS['myDatabase'];
+        $sql = "insert into account(username, password, firstname, lastname, email, telephone) values(?,?,?,?,?,?)";
+        $stmt = $accountDB->prepare($sql);
+        $stmt->bind_param("ssssss", $username, $password, $firstname, $lastname, $email, $tel);
         if ($stmt->execute()){
             $stmt->close();
-            $AccountDB->close();
             return true;
         }
         else{
             $stmt->close();
-            $AccountDB->close();
             return false;
         }
     }
-    function AddItems($username, $email, $item_name, $type, $price, $weight, $quantity){
-        $InventoryDB = MySQLConnector("inventory");
-        $stmt = $InventoryDB->prepare("insert into items(username, email, item_name, type, price, weight, quantity) values(?,?,?,?,?,?,?)");
-        $stmt->bind_param("ssssddi", $username, $email, $item_name, $type, $price, $weight, $quantity);
-        if ($stmt->execute()){
+    function AddItems($user_id, $item_name, $item_type, $item_price, $item_weight, $quantity){
+        $itemsDB = $GLOBALS['myDatabase'];
+        $sql = "insert into items(user_id, item_name, item_type, item_price, item_weight, quantity) values(?,?,?,?,?,?,?)";
+        $stmt = $itemsDB->prepare($sql)
+        $stmt->bind_param("issddi", $user_id, $item_name, $item_type, $item_price, $item_weight, $quantity);
+        if ($stmt->excute()){
             $stmt->close();
-            $InventoryDB->close();
             return true;
         }
         else{
             $stmt->close();
-            $InventoryDB->close();
             return false;
         }
     }

@@ -1,13 +1,17 @@
 function validateform(){
     var username = document.forms['myform']['username'].value;
     var password = document.forms['myform']['password'].value;
-    var name = document.forms['myform']['name'].value;
+    var firstname = document.forms['myform']['firstname'].value;
     var lastname = document.forms['myform']['lastname'].value;
-    var age = document.forms['myform']['age'].value;
     var email = document.forms['myform']['email'].value;
-    var address = document.forms['myform']['address'].value;
     var tel = document.forms['myform']['telephone'].value;
-    return false;
+    if (usernameValidate(username)&&passwordValidate(password)&&
+    nameAndlastnameValidate(firstname, lastname)&&emailValidate(email)&&telephoneValidate(tel)){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 function usernameValidate(username){
     var regex = RegExp(/^[a-zA-Z0-9]+$/);

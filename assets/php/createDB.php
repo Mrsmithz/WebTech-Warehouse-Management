@@ -10,14 +10,12 @@
         include("SQLQuery.php");
         $username = $_POST['username'];
         $password = $_POST['password'];
-        $name = $_POST['name'];
+        $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
-        $age = $_POST['age'];
         $email = $_POST['email'];
-        $address = $_POST['address'];
         $tel = $_POST['telephone'];
         if (!checkIfAccountExist($username)){
-            if (createAccount($username, $password, $name, $lastname, $age, $email, $address, $tel)){
+            if (createAccount($username, $password, $firstname, $lastname, $email, $tel)){
                 echo "<h1>Registered Successful !</h1>";
             }
             else{
