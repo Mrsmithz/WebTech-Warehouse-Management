@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+        <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+        <style>
+            *{
+                font-family: 'Mitr', sans-serif;
+            }
+
+            .v-tab--active {
+                background-color: white;
+                color: black !important;
+            }
+        </style>
+</head>
+
+<body>
+    <div id="app">
+        <v-app id="inspire">
+            <v-card class="mx-auto" style="background-color: aquamarine; width: 50vh; margin-top: 10vh;">
+                <v-tabs background-color="grey lighten-5" light v-model="tab">
+                    <v-tabs-slider color="#1d8649"></v-tabs-slider>
+                    <v-tab style="width: 50%; font-size: 20px; padding: 5px 0px;">เข้าสู่ระบบ</v-tab>
+                    <v-tab style="width: 50%; font-size: 20px;">สมัครสมาชิก</v-tab>
+                </v-tabs>
+                <v-tabs-items v-model="tab">
+                    <v-tab-item :key="เข้าสู่ระบบ">
+                        <v-card-text>eiei</v-card-text>
+                    </v-tab-item>
+                    <v-tab-item :key="สมัครสมาชิก">
+                        <v-card-text>eiei</v-card-text>
+                    </v-tab-item>
+                </v-tabs-items>
+            </v-card>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            vuetify: new Vuetify(),
+            data() {
+                return {
+                    tab: null,
+                    items: ["One", "Two"],
+                    text:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                };
+            },
+
+        });
+    </script>
+</body>
+
+</html>
