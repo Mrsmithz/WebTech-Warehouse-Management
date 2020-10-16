@@ -17,6 +17,9 @@
     <title>Document</title>
 </head>
 <style>
+    #navbarSupportedContent > form > a.text-dark.mr-4 {
+        text-decoration: none;
+    }
     body {
         margin: 0;
     }
@@ -92,6 +95,11 @@
         background: rgb(189, 211, 123);
         color: white;
     }
+    @media screen and (max-device-width: 480px) {
+        .bg_top {
+            background-image: url(img/bg-landing.png);
+        }
+    }
 </style>
 <body>
     <div class="bg_top">
@@ -152,12 +160,12 @@
         </div>
         <div id="content" class="container">
             <div class="row">
-                <div class="col p-4 d-flex flex-column justify-content-center">
+                <div class="col-md-6 col-12 p-4 d-flex flex-column justify-content-center">
                     <h2>ระบบจัดการร้านค้าออนไลน์</h2>
                     <h5 class="my-4 py-2">ครอบคลุมทุกการจัดส่ง ตอบโจทย์ทุกการขาย</h5>
                     <a href="loginn.html" class="btn btn_green register">สมัครสมาชิก</a>
                 </div>
-                <div class="col">
+                <div class="col-md-6 col-12">
                     <img src="img/Group-3740.png" alt="" class="w-100">
                 </div>
             </div>
