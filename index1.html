@@ -22,11 +22,28 @@
     }
     body {
         font-family: "db_heaventlight", sans-serif;
-        font-family: "db_heaventlight", sans-serif;
         font-weight: 300;
         font-size: var(--font-base);
         line-height: calc(var(--base-lh) / var(--base-px));
         margin: 0;
+    }
+    h2 {
+        font-size: calc(var(--h2-fz-m) / 10 * 1rem);
+        line-height: calc(var(--h2-height-m) / var(--h2-fz-m));
+        margin: 0 0 8px !important;
+        position: relative;
+        /* float: left; */
+        font-weight: 400;
+        font-style: normal;
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        letter-spacing: 0.02em;
+        width: 100%;
+        font-family: "db_heaventmed", serif;
+        font-weight: 1000;
     }
     h3 {
         font-size: calc(var(--h3-fz-m) / 10 * 1rem);
@@ -131,18 +148,31 @@
         display: block;
         
     }
+    section {
+    margin: 24px 0 44px;
+    width: 100%;
+    float: left;
+    display: block;
+    }
     .lazyloaded {
     opacity: 1;
     transition: opacity 400ms;
     transition-delay: 0ms;
     }
     .page2 {
-        background: #000;
+        /* text-align: center; */
+        background: white;
         width: 100%;
         height: 60vh;
+        font-size: 32px;
+        font-weight: 100;
     }
+    /* .video_img {
+        width: 100vw;
+    } */
     .page3 {
-        background: #000;
+        /* text-align: center; */
+        background:white;
         width: 100%;
         height: 60vh;
     }
@@ -311,14 +341,17 @@
 
                             <a href="">ดูทั้งหมด<img src="img/icon-arrow-right.png" class=" lazyloaded" src="img/icon-arrow-right.png"><noscript><img  data-src="img/icon-arrow-right.png" class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><noscript><img  data-src="img/icon-arrow-right.png" class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><noscript><img src="img/icon-arrow-right.png"></noscript></a>
                         </article>
+                        <p> <strong></strong><br></p>
                     <!-- </section> -->
                     </div>
-
-            </div>
+                    
+            </div><br><br><br><br>
+            <section class="feature">
+                <div class="page2">
+                    <h2>รู้จักฟีเจอร์ของ Fillgoods ที่ตอบโจทย์การขายอย่าง<span class="sm--block" style="white-space: nowrap;">ครบครัน</span></h2>
+               </div> 
+            </section>
         </div>
-
-    </div>
-    <div class="page2">
     </div>
     <div class="page3">
     </div>
