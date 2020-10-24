@@ -203,6 +203,10 @@
             background-image: url(img/bg-landing.png);
         }
     }
+
+    #background-video { width: 640px; height: 360px; position: relative; }
+    #background-video iframe { width: 100%; height: 100%; display: none; }
+    #background-video .play-btn { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; font-size: 0px; line-height: 0px; background: url(http://www.legacycitychurch.com/media/cover_art/Play%20Button%20Overlay/playbutton.png) center center no-repeat; background-size: 120px auto; }
 </style>
 <body>
     <div class="bg_top">
@@ -348,7 +352,15 @@
             </div><br><br><br><br>
             <section class="feature">
                 <div class="page2">
-                    <h2>รู้จักฟีเจอร์ของ Fillgoods ที่ตอบโจทย์การขายอย่าง<span class="sm--block" style="white-space: nowrap;">ครบครัน</span></h2>
+                    <h2 style="padding-left: 30px; padding-right: 30px;">รู้จักฟีเจอร์ของ Fillgoods ที่ตอบโจทย์การขายอย่าง<span class="sm--block" style="white-space: nowrap;">ครบครัน</span></h2>
+                    <br><br>
+                    <div id="background-video" style="background: url('img/fg-video-thumb.jpg') top center no-repeat; background-size: cover; margin: auto" class="mb-4">
+
+                        <iframe width="295" height="222" src="https://www.youtube.com/embed/p-sQkgR0sLA?enablejsapi=1&origin=https%3A%2F%2Ffillgoods.co&widgetid=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+                        </iframe>
+                        <a class="play-btn" href="#">Play Button</a>
+                    
+                    </div>
                </div> 
             </section>
         </div>
@@ -363,6 +375,13 @@
             let navbar = document.querySelector('#navBar');
             navbar.classList.toggle('bg-light', window.scrollY > 0);
         })
+
+        jQuery('.play-btn').click(function(e) {
+            e.preventDefault();
+            jQuery(this).hide();
+            jQuery('#background-video').find('iframe').show();
+            jQuery('#background-video').find('iframe')[0].src += "?autoplay=1";
+        });
     </script>
 </body>
 </html>
