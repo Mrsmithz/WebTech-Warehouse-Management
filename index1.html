@@ -154,6 +154,7 @@
     float: left;
     display: block;
     }
+    
     .lazyloaded {
     opacity: 1;
     transition: opacity 400ms;
@@ -172,20 +173,23 @@
     } */
     .page3 {
         /* text-align: center; */
+        margin-top: 25%;
         background:white;
         width: 100%;
         height: 60vh;
     }
-    .page4 {
-        background: #fff;
+    .process {
+        padding: 3%;
+        background: #000;
+        color: white;
         width: 100%;
-        height: 60vh;
+        height: 100%;
     }
-    .footer {
+    /* .footer {
         background:green;
         width: 100%;
         height: 10vh;
-    }
+    } */
     .register {
         width: 126.46px;
         height: 43px;
@@ -203,6 +207,39 @@
             background-image: url(img/bg-landing.png);
         }
     }
+    /* span,
+  span:before,
+  span:after {
+    cursor: pointer;
+    border-radius: 1px;
+    height: 5px;
+    width: 35px;
+    background: $nav-font-color;
+    position: absolute;
+    display: block;
+    content: '';
+    transition: all 300ms ease-in-out;
+  }
+  span:before {
+    top: -10px;
+  }
+  span:after {
+    bottom: -10px;
+  }
+  &.active span {
+    background-color: transparent;
+    &:before,
+    &:after {
+      top: 0;
+    }
+    &:before {
+      transform: rotate(45deg);
+    }
+    &:after {
+      transform: rotate(-45deg);
+    }
+  }
+} */
 
     #background-video { width: 640px; height: 360px; position: relative; }
     #background-video iframe { width: 100%; height: 100%; display: none; }
@@ -210,6 +247,7 @@
 </style>
 <body>
     <div class="bg_top">
+        <!-- https://codepen.io/taniarascia/pen/dYvvYv -->
         <div id="navBar">
             <nav class="navbar navbar-expand-lg navbar-light container">
                 <a class="navbar-brand" href="#">
@@ -274,6 +312,7 @@
                 </div>
                 <div class="col-md-6 col-12">
                     <img src="img/Group-3740.png" alt="" class="w-100">
+                    <!-- https://www.educative.io/edpresso/how-to-crop-an-image-in-css -->
                 </div>
             </div>
         </div>
@@ -355,7 +394,7 @@
                     <h2 style="padding-left: 30px; padding-right: 30px;">รู้จักฟีเจอร์ของ Fillgoods ที่ตอบโจทย์การขายอย่าง<span class="sm--block" style="white-space: nowrap;">ครบครัน</span></h2>
                     <br><br>
                     <div id="background-video" style="background: url('img/fg-video-thumb.jpg') top center no-repeat; background-size: cover; margin: auto" class="mb-4">
-
+                        <!-- https://stackoverflow.com/questions/51787522/adding-image-to-the-background-youtube-video-on-iframe-tag -->
                         <iframe width="295" height="222" src="https://www.youtube.com/embed/p-sQkgR0sLA?enablejsapi=1&origin=https%3A%2F%2Ffillgoods.co&widgetid=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
                         </iframe>
                         <a class="play-btn" href="#">Play Button</a>
@@ -363,12 +402,44 @@
                     </div>
                </div> 
             </section>
+            <div>
+    <section class="partner">
+        <div class="page3">
+            <h2>พาร์ทเนอร์ขนส่ง</h2>
+            <p class="subtitle">
+                ส่งสินค้าสะดวกและปลอดภัย
+                <span class="sm--block">กับพาร์ทเนอร์</span>
+                ขนส่งชั้นนำของประเทศ
+            </p> 
+            <img style="max-width: 100%; margin: 32px 0; width: 100%" data-src="img/partner.svg" class=" lazyloaded" src="img/partner.svg"><noscript><img src="http://www.fillgoods.co/wp-content/uploads/2020/10/partner.svg" style="max-width: 100%; margin: 32px 0; width: 100%">
+        </noscript>
+    </div>
+    </section>
+    <section class="process">
+        <div class="page4">
+            <h2>ความก้าวหน้าของเรา</h2>
+            <p class="subtitle"></p>
+            <article> <img data-src="img/icon-order.svg" class=" lazyloaded" src="img/icon-order.svg"><noscript><img src="img/icon-order.svg">
+            </noscript>
+            <h3>สร้างออเดอร์มากกว่า<br>3.6 ล้านครั้ง</h3>
+            <p></p>
+        </article>
+        <article> 
+            <img data-src="img/icon-transport.svg" class=" lazyloaded" src="img/icon-transport.svg">
+            <noscript>
+                <img src="img/icon-transport.svg"></noscript>
+                <h3>ขนส่งมากกว่า<br>3 ล้านชิ้น</h3>
+                <p></p>
+            </article>
+        <article> 
+            <img data-src="img/icon-growth.svg" class=" lazyloaded" src="img/icon-growth.svg">
+            <noscript>
+                <img src="img/icon-growth.svg"></noscript>
+                <h3>การเติบโต ปี 2019<br>537 %</h3>
+                <p></p>
+            </article>
         </div>
-    </div>
-    <div class="page3">
-    </div>
-    <div class="page4">
-    </div>
+    </section>
     <div class="footer"></div>
     <script>
         window.addEventListener('scroll', function() {
@@ -385,3 +456,5 @@
     </script>
 </body>
 </html>
+
+<!-- https://codepen.io/Venom/pen/gPLjGy?editors=110                !hr! เส้นๆ -->
