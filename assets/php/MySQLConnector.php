@@ -1,11 +1,11 @@
 <?php
-    function MySQLConnector($host, $username, $password, $dbname){
-        $hostname = $host;
-        $user = $username;
-        $pass = $password;
-        $db = $dbname;
-
-        $conn = new mysqli($hostname, $user, $pass, $db) or die("Connect failed %s\n.". $conn->error);
-        return $conn;
+    class MySQLConnector{
+        private $conn;
+        function __construct(){
+            $this->conn = new mysqli("34.87.91.113", "root", "031961698", "MyDatabase") or die("Connect failed %s\n.". $conn->error);
+        }
+        function getConn(){
+            return $this->conn;
+        }
     }
 ?>
