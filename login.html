@@ -89,6 +89,14 @@
             height: 40px !important;
         }
 
+        .num_only input[type='number'] {
+            -moz-appearance:textfield;
+        }
+        .num_only input::-webkit-outer-spin-button,
+        .num_only input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
     </style>
 </head>
 
@@ -159,26 +167,81 @@
                         <div class="col-md-12">
                             <v-form ref="register_form" v-model="valid" lazy-validation>
 
-                                <v-text-field v-model="register_username" color="red" label="Username"  required></v-text-field>
+                                <v-text-field v-model="register_username" :rules="register_usernameRules" color="red" required>
+                                    <template v-slot:label>
+                                        <div style="font-weight: 300; font-size: 18px;">
+                                          USERNAME
+                                        </div>
+                                      </template>
+                                </v-text-field>
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <v-text-field v-model="register_firstname" color="red" label="ชื่อ"  required></v-text-field>
+                                        <v-text-field v-model="register_firstname" :rules="register_firstnameRules" color="red" required>
+                                            <template v-slot:label>
+                                                <div style="font-weight: 300; font-size: 18px;">
+                                                  ชื่อ
+                                                </div>
+                                              </template>
+                                        </v-text-field>
                                     </div>
                                     <div class="col-md-6">
-                                        <v-text-field v-model="register_lastname" color="red" label="นามสกุล"  required></v-text-field>
+                                        <v-text-field v-model="register_lastname" :rules="register_lastnameRules" color="red" required>
+                                            <template v-slot:label>
+                                                <div style="font-weight: 300; font-size: 18px;">
+                                                  นามสกุล
+                                                </div>
+                                              </template>
+                                        </v-text-field>
                                     </div>
                                 </div>
 
-                                <v-text-field v-model="register_telephone" color="red" label="เบอร์โทรศัพท์" required></v-text-field>
+                                <v-text-field class="num_only" v-model="register_telephone" :rules="register_telephoneRules" color="red" type="text" required>
+                                    <template v-slot:label>
+                                        <div style="font-weight: 300; font-size: 18px;">
+                                          เบอร์โทรศัพท์
+                                        </div>
+                                      </template>
+                                </v-text-field>
 
-                                <v-text-field v-model="register_email" color="red" label="อีเมล" required></v-text-field>
+                                <v-text-field v-model="register_email" :rules="register_emailRules" color="red" required>
+                                    <template v-slot:label>
+                                        <div style="font-weight: 300; font-size: 18px;">
+                                          อีเมล
+                                        </div>
+                                      </template>
+                                </v-text-field>
 
-                                <v-text-field v-model="register_password" color="red" label="รหัสผ่าน" required></v-text-field>
+                                <v-text-field v-model="register_password" :rules="register_passwordRules" color="red" required>
+                                    <template v-slot:label>
+                                        <div style="font-weight: 300; font-size: 18px;">
+                                          รหัสผ่าน
+                                        </div>
+                                      </template>
+                                </v-text-field>
 
-                                <v-btn :disabled="!valid" fill-height color="success" class="mr-4" @click="signup_validate"
-                                    style="width: 100% ; margin-top: 20px; height: 40px;">
+                                <v-btn class="login_button" :disabled="!valid" fill-height class="mr-4" @click="signup_validate">
                                     <p class="bottom_button">SIGN UP</p>
+                                </v-btn>
+
+                                <v-btn color="blue darken-2"
+                                    class=" white--text bottom_button other_button" @click="" style="padding-left: 20px">
+                                    <i class="v-icon v-icon--left fa fa-facebook" aria-hidden="true" style="font-size: 22px;"></i>
+                                    <p class="bottom_button">CONTINUE WITH FACEBOOK</p>
+                                </v-btn>
+
+                                <v-btn color="white"
+                                    class="bottom_button other_button" @click="" style="color: black;">
+                                    <svg width="20" height="20" viewBox="0 0 200 200" style="margin-right: 12.5px;">
+                                        <image width="200" height="200" xlink:href="img/search.svg"/>
+                                    </svg>
+                                    <p class="bottom_button">CONTINUE WITH GOOGLE</p>
+                                </v-btn>
+
+                                <v-btn color="black"
+                                    class=" white--text bottom_button other_button" @click="" style="width: 100%; margin-top: 24px; height: 40px; ">
+                                    <i class="v-icon v-icon--left fa fa-apple" aria-hidden="true" style="font-size: 18px;"></i>
+                                    <p class="bottom_button">CONTINUE WITH APPLE</p>
                                 </v-btn>
 
                             </v-form>
@@ -228,7 +291,7 @@
                 signup_validate(){
                     this.$refs.register_form.validate()
                     console.log(this.register_username)
-                }
+                },
             },
         });
 
