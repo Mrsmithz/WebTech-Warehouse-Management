@@ -12,8 +12,5 @@
          $this->quantity = $quantity;
          $this->user_id = $user_id;
      }
-     function getUser_id(){
-         return $this->user_id;
-     }
  }
 ?>
