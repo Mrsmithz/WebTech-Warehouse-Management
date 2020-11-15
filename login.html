@@ -5,6 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap"
@@ -33,37 +34,104 @@
                 width: 95% !important;
             }
         }
+
+        .bottom_button{
+            margin-right: 10px;
+        }
+
+        p.bottom_button{
+            margin-top: 20px;
+            font-size: 15px !important;
+            font-weight: 500;
+        }
+
+        .v-messages__message{
+            margin-top: 15px;
+            margin-bottom: 2px;
+            font-size: 14.75px !important;
+            font-weight: 400 !important;
+        }
+
     </style>
 </head>
 
 <body>
     <div id="app">
-        <v-app id="inspire" style="padding-top: 120px;">
-            <img style="width: 206px; margin: 0 auto;" src="img/Login/icon.png">
-            <v-card class="mx-auto card-main" style="width: 400px; margin-top: 28px;">
-                <v-tabs background-color="grey lighten-5" light v-model="tab">
+        <v-app id="inspire" style="padding-top: 130px;">
+            <img style="width: 228px; margin: 0 auto;" src="img/Login/icon.png">
+            <v-card class="mx-auto card-main" style="width: 440px; margin-top: 28px;">
+                <v-tabs background-color="grey lighten-5" light v-model="tab" >
                     <v-tabs-slider color="#1d8649"></v-tabs-slider>
-                    <v-tab style="width: 50%; font-size: 20px; padding: 5px 0px; font-size: 18px;">เข้าสู่ระบบ</v-tab>
-                    <v-tab style="width: 50%; font-size: 20px; font-size: 18px;">สมัครสมาชิก</v-tab>
+                    <v-tab style="width: 50%; font-size: 25px; padding: 10px 0px; font-size: 20px; font-weight: 400;">เข้าสู่ระบบ</v-tab>
+                    <v-tab style="width: 50%; font-size: 25px; padding: 10px 0px; font-size: 20px; font-weight: 400;">สมัครสมาชิก</v-tab>
                 </v-tabs>
-                <v-tabs-items v-model="tab" style="padding: 30px;">
-                    <v-tab-item :key="เข้าสู่ระบบ">
+                <v-tabs-items v-model="tab" style="padding:35px; padding-top: 60px;">
+                    <v-tab-item :key="login">
                         <div class="col-md-12">
-                        <v-form ref="form" v-model="valid" lazy-validation>
+                            <v-form ref="form" v-model="valid" lazy-validation>
 
-                            <v-text-field v-model="email" :rules="emailRules" label="อีเมล" required></v-text-field>
+                                <v-text-field v-model="email" :rules="emailRules" color="red" label="อีเมล"  required></v-text-field>
 
-                            <v-text-field v-model="password" :rules="passRules" label="รหัสผ่าน" required></v-text-field>
+                                <v-text-field v-model="password" :type="show1 ? 'text' : 'password'" :rules="passRules" color="red" label="รหัสผ่าน" required style="margin-top: 10px;">
+                                </v-text-field>
 
-                            <v-btn :disabled="!valid" color="success" class="mr-4" @click="validate" style="width: 100% ; margin-top: 20px;">
-                                LOG IN
-                            </v-btn>
+                                <v-btn :disabled="!valid" fill-height color="success" class="mr-4" @click="validate"
+                                    style="width: 100% ; margin-top: 20px; height: 40px;">
+                                    <p class="bottom_button">LOG IN</p>
+                                </v-btn>
 
-                        </v-form>
-                    </div>
+                                <v-btn color="blue darken-2"
+                                    class=" white--text bottom_button" @click="" style="width: 100%; margin-top: 24px; height: 40px;">
+                                    <i class="v-icon v-icon--left fa fa-facebook" aria-hidden="true"></i>
+                                    <p class="bottom_button">CONTINUE WITH FACEBOOK</p>
+
+                                </v-btn>
+
+                                <v-btn color="blue darken-2"
+                                    class=" white--text bottom_button" @click="" style="width: 100%; margin-top: 24px; height: 40px; ">
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                    CONTINUE WITH FACEBOOK
+
+                                </v-btn>
+
+                                <v-btn color="blue darken-2"
+                                    class=" white--text bottom_button" @click="" style="width: 100%; margin-top: 24px; height: 40px; ">
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                    CONTINUE WITH FACEBOOK
+
+                                </v-btn>
+
+                            </v-form>
+                        </div>
                     </v-tab-item>
-                    <v-tab-item :key="สมัครสมาชิก">
-                        <v-card-text>eiei</v-card-text>
+                    <v-tab-item :key="register">
+                        <div class="col-md-12">
+                            <v-form ref="register_form" v-model="valid" lazy-validation>
+
+                                <v-text-field v-model="register_username" color="red" label="Username"  required></v-text-field>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <v-text-field v-model="register_firstname" color="red" label="ชื่อ"  required></v-text-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <v-text-field v-model="register_lastname" color="red" label="นามสกุล"  required></v-text-field>
+                                    </div>
+                                </div>
+
+                                <v-text-field v-model="register_telephone" color="red" label="เบอร์โทรศัพท์" required></v-text-field>
+
+                                <v-text-field v-model="register_email" color="red" label="อีเมล" required></v-text-field>
+
+                                <v-text-field v-model="register_password" color="red" label="รหัสผ่าน" required></v-text-field>
+
+                                <v-btn :disabled="!valid" fill-height color="success" class="mr-4" @click="signup_validate"
+                                    style="width: 100% ; margin-top: 20px; height: 40px;">
+                                    <p class="bottom_button">LOG IN</p>
+                                </v-btn>
+
+                            </v-form>
+                        </div>
                     </v-tab-item>
                 </v-tabs-items>
             </v-card>
@@ -86,20 +154,29 @@
                     email: '',
                     emailRules: [
                         v => !!v || 'กรุณากรอกอีเมล',
-                        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
                     ],
                     password: '',
                     passRules: [
                         v => !!v || 'กรุณากรอกรหัสผ่าน',
-                        v => (v && v.length <= 6) || 'กรุณากรอกรหัสผ่านมากกว่า 6 ตัว',
+                        v => (v && v.length > 6) || 'กรุณากรอกรหัสผ่านมากกว่า 6 ตัว',
                     ],
+                    register_username: '',
+                    register_firstname: '',
+                    register_lastname: '',
+                    register_telephone: '',
+                    register_email: '',
+                    register_password: '',
                 };
             },
             methods: {
                 validate() {
                     this.$refs.form.validate()
-                    console.log(this.email)
+                    console.log(this.password)
                 },
+                signup_validate(){
+                    this.$refs.register_form.validate()
+                    console.log(this.register_username)
+                }
             },
         });
 
