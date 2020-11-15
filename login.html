@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
-    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap"
-        rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     <style>
         * {
-            font-family: 'Mitr', sans-serif;
+            font-family: 'Kanit', sans-serif;
         }
 
         #inspire {
@@ -22,6 +22,7 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            padding-top: 130px;
         }
 
         .v-tab--active {
@@ -29,9 +30,31 @@
             color: black !important;
         }
 
+        .tabs{
+            width: 50%;
+            font-size: 25px;
+            padding: 10px 0px;
+            font-size: 20px;
+            font-weight: 400;
+        }
+
+        .tabs-item{
+            padding:35px;
+            padding-top: 60px;
+        }
+
         @media screen and (max-width:600px) {
             .card-main {
                 width: 95% !important;
+            }
+
+            .tabs-item{
+                padding: 5px !important;
+                padding-top: 60px !important;
+            }
+
+            #inspire{
+                padding-top: 40px !important;
             }
         }
 
@@ -40,8 +63,8 @@
         }
 
         p.bottom_button{
-            margin-top: 20px;
-            font-size: 15px !important;
+            margin-top: 15px;
+            font-size: 16px !important;
             font-weight: 500;
         }
 
@@ -52,59 +75,87 @@
             font-weight: 400 !important;
         }
 
+        .login_button{
+            width: 100% ;
+            margin-top: 50px;
+            height: 42.5px !important;
+            background-color: rgb(29, 134, 73) !important;
+            border-color: rgb(29, 134, 73); color: white !important;
+        }
+
+        .other_button{
+            width: 100%;
+            margin-top: 24px !important;
+            height: 40px !important;
+        }
+
     </style>
 </head>
 
 <body>
     <div id="app">
-        <v-app id="inspire" style="padding-top: 130px;">
+        <v-app id="inspire">
             <img style="width: 228px; margin: 0 auto;" src="img/Login/icon.png">
             <v-card class="mx-auto card-main" style="width: 440px; margin-top: 28px;">
                 <v-tabs background-color="grey lighten-5" light v-model="tab" >
                     <v-tabs-slider color="#1d8649"></v-tabs-slider>
-                    <v-tab style="width: 50%; font-size: 25px; padding: 10px 0px; font-size: 20px; font-weight: 400;">เข้าสู่ระบบ</v-tab>
-                    <v-tab style="width: 50%; font-size: 25px; padding: 10px 0px; font-size: 20px; font-weight: 400;">สมัครสมาชิก</v-tab>
+                    <v-tab class="tabs">เข้าสู่ระบบ</v-tab>
+                    <v-tab class="tabs">สมัครสมาชิก</v-tab>
                 </v-tabs>
-                <v-tabs-items v-model="tab" style="padding:35px; padding-top: 60px;">
-                    <v-tab-item :key="login">
+                <v-tabs-items v-model="tab" class="tabs-item">
+                    <v-tab-item>
                         <div class="col-md-12">
                             <v-form ref="form" v-model="valid" lazy-validation>
 
-                                <v-text-field v-model="email" :rules="emailRules" color="red" label="อีเมล"  required></v-text-field>
-
-                                <v-text-field v-model="password" :type="show1 ? 'text' : 'password'" :rules="passRules" color="red" label="รหัสผ่าน" required style="margin-top: 10px;">
+                                <v-text-field v-model="email" :rules="emailRules" color="red" required>
+                                    <template v-slot:label>
+                                        <div style="font-weight: 300; font-size: 18px;">
+                                          อีเมล
+                                        </div>
+                                      </template>
                                 </v-text-field>
 
-                                <v-btn :disabled="!valid" fill-height color="success" class="mr-4" @click="validate"
-                                    style="width: 100% ; margin-top: 20px; height: 40px;">
+                                <v-text-field v-model="password" :type="show1 ? 'text' : 'password'" :rules="passRules" color="red" required style="margin-top: 10px;">
+                                    <template v-slot:label>
+                                        <div style="font-weight: 300; font-size: 18px;">
+                                          รหัสผ่าน
+                                        </div>
+                                      </template>
+                                </v-text-field>
+
+                                <v-btn class="login_button" :disabled="!valid" fill-height class="mr-4" @click="validate">
                                     <p class="bottom_button">LOG IN</p>
                                 </v-btn>
 
                                 <v-btn color="blue darken-2"
-                                    class=" white--text bottom_button" @click="" style="width: 100%; margin-top: 24px; height: 40px;">
-                                    <i class="v-icon v-icon--left fa fa-facebook" aria-hidden="true"></i>
+                                    class=" white--text bottom_button other_button" @click="" style="padding-left: 20px">
+                                    <i class="v-icon v-icon--left fa fa-facebook" aria-hidden="true" style="font-size: 22px;"></i>
                                     <p class="bottom_button">CONTINUE WITH FACEBOOK</p>
-
                                 </v-btn>
 
-                                <v-btn color="blue darken-2"
-                                    class=" white--text bottom_button" @click="" style="width: 100%; margin-top: 24px; height: 40px; ">
-                                    <i class="fa fa-facebook" aria-hidden="true"></i>
-                                    CONTINUE WITH FACEBOOK
-
+                                <v-btn color="white"
+                                    class="bottom_button other_button" @click="" style="color: black;">
+                                    <svg width="20" height="20" viewBox="0 0 200 200" style="margin-right: 12.5px;">
+                                        <image width="200" height="200" xlink:href="img/search.svg"/>
+                                    </svg>
+                                    <p class="bottom_button">CONTINUE WITH GOOGLE</p>
                                 </v-btn>
 
-                                <v-btn color="blue darken-2"
-                                    class=" white--text bottom_button" @click="" style="width: 100%; margin-top: 24px; height: 40px; ">
-                                    <i class="fa fa-facebook" aria-hidden="true"></i>
-                                    CONTINUE WITH FACEBOOK
+                                <v-btn color="black"
+                                    class=" white--text bottom_button other_button" @click="" style="width: 100%; margin-top: 24px; height: 40px; ">
+                                    <i class="v-icon v-icon--left fa fa-apple" aria-hidden="true" style="font-size: 18px;"></i>
+                                    <p class="bottom_button">CONTINUE WITH APPLE</p>
+                                </v-btn>
 
+                                <v-btn
+                                    class="v-btn--flat v-btn--text theme--light bottom_button other_button" @click="" style="color: black; box-shadow: none; font-size: 5px; margin-bottom: 20px;">
+                                    <p class="bottom_button" style="color: rgb(29, 134, 73);">ลืมรหัสผ่าน</p>
                                 </v-btn>
 
                             </v-form>
                         </div>
                     </v-tab-item>
-                    <v-tab-item :key="register">
+                    <v-tab-item>
                         <div class="col-md-12">
                             <v-form ref="register_form" v-model="valid" lazy-validation>
 
@@ -127,7 +178,7 @@
 
                                 <v-btn :disabled="!valid" fill-height color="success" class="mr-4" @click="signup_validate"
                                     style="width: 100% ; margin-top: 20px; height: 40px;">
-                                    <p class="bottom_button">LOG IN</p>
+                                    <p class="bottom_button">SIGN UP</p>
                                 </v-btn>
 
                             </v-form>
@@ -148,6 +199,7 @@
                 return {
                     tab: null,
                     valid: true,
+                    show1: false,
                     items: ["One", "Two"],
                     text:
                         "L  orem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
