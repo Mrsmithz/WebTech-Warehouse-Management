@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Sarabun', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        #inspire {
+            background-color: #eff2f5;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .logo {
+            height: inherit;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            border-right: 2px solid #d0dadc;
+        }
+
+        .bars-button {
+            box-shadow: none !important;
+            font-size: 18px !important;
+            padding-top: 15px !important;
+            justify-content: left !important;
+        }
+
+        .bars-button-last {
+            box-shadow: none !important;
+            font-size: 18px !important;
+            padding-top: 15px !important;
+            justify-content: left !important;
+            background-color: #1d8649 !important;
+            color: white !important;
+            border-radius: 9px !important;
+        }
+
+        .bars-button-user {
+            box-shadow: none !important;
+            font-size: 18px !important;
+            justify-content: left !important;
+        }
+
+        .bars-button-bell {
+            padding: 0 !important;
+            box-shadow: none !important;
+            border-radius: 50px !important;
+            font-size: 23px !important;
+            color: #1d8649 !important;
+        }
+
+        .bars-button-right {
+            box-shadow: none !important;
+            font-size: 18px !important;
+            padding-top: 15px;
+            justify-content: left !important;
+            float: right !important;
+        }
+
+        .result-col {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+            border-right: 1px solid rgba(0, 0, 0, .1);
+        }
+
+        .button-right{
+            box-shadow: none !important;
+            padding-top: 15px !important;
+            font-size: 22px !important;
+            background-color: #1d8649 !important;
+            border-radius: 2px !important;
+            color: white !important;
+        }
+
+        @media screen and (max-width: 600px) {}
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <v-app id="inspire">
+            <v-app-bar absolute dense style="
+            background-color: rgb(248, 248, 248);
+            border-color: rgb(248, 248, 248);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            padding: 0px 10px;
+          ">
+                <div class="logo hidden-sm-and-down">
+                    <span>
+                        <img src="img/logo.png" style="height: 27.5px; padding-right: 26px" />
+                    </span>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" @click="test">
+                        <p>ภาพรวม</p>
+                    </v-btn>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button " v-bind="attrs" v-on="on"
+                                style="padding: 0 15px">
+                                <p style="padding-right: 8px">
+                                    สินค้า <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </p>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px;">
+                                    <p style="font-size: 18px;">
+                                        จัดการสินค้า
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                style="padding: 0 15px">
+                                <p style="padding-right: 8px">
+                                    ออเดอร์ <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </p>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        รายการ
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        สร้างออเดอร์
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        กู้คืนออเดอร์
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button">
+                        <p>รายชื่อลูกค้า</p>
+                    </v-btn>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                style="padding: 0 15px">
+                                <p style="padding-right: 8px">
+                                    รายงาน <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </p>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        ภาพรวมอย่างละเอียด
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        รายงานการขนส่ง
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" style="overflow: hidden;">
+                        <p>ช่องทางการขาย</p>
+                        <svg width="90" height="50" viewBox="0 0 200 200"
+                            style="position: absolute; left: 60px; top: 5px;">
+                            <image width="200" height="200" xlink:href="img/beta.svg" />
+                        </svg>
+                    </v-btn>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" style="overflow: hidden;">
+                        <p>ศูนย์ช่วยเหลือ</p>
+                    </v-btn>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down" style="padding: 5px 0;">
+                    <v-btn class="bars-button-last" style="overflow: hidden;">
+                        <p>สมัครลูกค้าประจำ</p>
+                    </v-btn>
+                </div>
+                <div class="spacer"></div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button-user" v-bind="attrs"
+                                v-on="on" style="padding: 0 15px; border-right: 2px solid #d0dadc; padding-top: 0;">
+
+                                <p style="padding-right: 8px">
+                                <div class="v-avatar" style="height: 25px; width: 25px; margin-right: 5px;">
+                                    <img src="img/shop.png">
+                                </div> NAME HERE <i class="fa fa-caret-down" aria-hidden="true"
+                                    style="margin-left: 5px;"></i>
+                                </p>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        แสดงร้านค้าทั้งหมด
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-btn class="bars-button-bell" icon>
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                    </v-btn>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down" style="float: right;">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button-right" v-bind="attrs"
+                                v-on="on" style="padding: 0 25px;">
+                                <div class="v-avatar" style="height: 40px; width: 40px;">
+                                    <img
+                                        src="https://www.shareicon.net/data/128x128/2015/10/07/113615_face_512x512.png">
+                                </div>
+                                <div class="v-avatar"
+                                    style="height: 22px; width: 22px; position: absolute; background-color: white; font-size: 20px; top: 25px; left: 25px;">
+                                    <i class="fa fa-cog" aria-hidden="true" style="color: #1d8649;"></i>
+                                </div>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        ภาพรวมอย่างละเอียด
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;">
+                                    <p style="font-size: 18px;">
+                                        รายงานการขนส่ง
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
+            </v-app-bar>
+            <div class="row wrap col-md-12 col-lg-10 col-xl-9" :lazy="lazy" v-if="isActive" v-model="isActive"
+                transition="fade-transition" style="padding-top: 55px; margin: 0 auto; padding: 55px 50px;">
+                <div class="col-lg-6">
+                    <v-card tile style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div>
+                            <svg style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
+                                viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M17,17H15V13H17M13,17H11V7H13M9,17H7V10H9M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z" />
+                            </svg>
+                            <p
+                                style="font-size: 23px; padding: 15px; padding-left: 40px; margin-bottom: 0; padding-bottom: 10px;">
+                                สรุปยอดขาย</p>
+                            <div class="row">
+                                <div class="col-md-4 result-col" style="padding-left: 30px;">
+                                    <p style="margin-bottom: 0;">0.00 ฿</p>
+                                    <p>วันนี้</p>
+                                </div>
+                                <div class="col-md-4 result-col">
+                                    <p style="margin-bottom: 0;">0.00 ฿</p>
+                                    <p>สัปดาห์นี้</p>
+                                </div>
+                                <div class="col-md-4 result-col" style="border: none;">
+                                    <p style="margin-bottom: 0;">0.00 ฿</p>
+                                    <p>เดือนนี้</p>
+                                </div>
+                            </div>
+                        </div>
+                    </v-card>
+
+                    <v-card tile style="width: 100%; margin-bottom: 15px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2) ">
+                        <div>
+                            <svg style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
+                                viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M6,17C6,15 10,13.9 12,13.9C14,13.9 18,15 18,17V18H6M15,9A3,3 0 0,1 12,12A3,3 0 0,1 9,9A3,3 0 0,1 12,6A3,3 0 0,1 15,9M3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3H5C3.89,3 3,3.9 3,5Z" />
+                            </svg>
+                            <p
+                                style="font-size: 23px; padding: 15px; padding-left: 40px; margin-bottom: 0; padding-bottom: 10px;">
+                                ปริมาณการสร้างออเดอร์ (ออเดอร์ต่อวัน)</p>
+
+                        </div>
+                    </v-card>
+
+                    <v-card tile style="width: 100%; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div class="row" style="text-align: center; color:  #1d8649; font-size: 24px; padding-top: 5px;">
+                            <div class="col-sm-6" style="border-right: 1px solid rgba(0, 0, 0, .1);">
+                                <p>แผนภาพสินค้าขายดี</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p>ช่องทางการขาย</p>
+                            </div>
+                        </div>
+                    </v-card>
+                </div>
+                <div class="col-lg-6">
+                    <v-card tile style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div>
+                            <svg style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
+                                viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M9 17H7V10H9V17M13 17H11V7H13V17M17 17H15V13H17V17M19.5 19.1H4.5V5H19.5V19.1M19.5 3H4.5C3.4 3 2.5 3.9 2.5 5V19C2.5 20.1 3.4 21 4.5 21H19.5C20.6 21 21.5 20.1 21.5 19V5C21.5 3.9 20.6 3 19.5 3Z" />
+                            </svg>
+                            <p
+                                style="font-size: 23px; padding: 15px; padding-left: 40px; margin-bottom: 0; padding-bottom: 10px;">
+                                สรุปคำสั่งซื้อ</p>
+                            <div class="row">
+                                <div class="col-md-4 result-col" style="padding-left: 30px;">
+                                    <p style="margin-bottom: 0;">0 รายการ</p>
+                                    <p>วันนี้</p>
+                                </div>
+                                <div class="col-md-4 result-col">
+                                    <p style="margin-bottom: 0;">0 รายการ</p>
+                                    <p>สัปดาห์นี้</p>
+                                </div>
+                                <div class="col-md-4 result-col" style="border: none;">
+                                    <p style="margin-bottom: 0;">0 รายการ</p>
+                                    <p>เดือนนี้</p>
+                                </div>
+                            </div>
+                        </div>
+                    </v-card>
+
+                    <v-card tile style="width: 100%; margin-bottom: 20px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div>
+                                <span style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;" class="material-icons">
+                                    list_alt
+                                    </span>
+                            <p
+                                style="font-size: 23px; padding: 15px; padding-left: 40px; margin-bottom: 0; padding-bottom: 10px;">
+                                สินค้าขายดีวันนี้</p>
+
+                        </div>
+                    </v-card>
+
+                    <div style="width: 100%;">
+                        <v-btn class="button-right" style="overflow: hidden; float: right;">
+                            <p>ภาพรวมอย่างละเอียด</p>
+                        </v-btn>
+                    </div>
+                </div>
+            </div>
+            <v-container :lazy="lazy" v-if="isActive2" v-model="isActive2" transition="fade-transition"
+                style="padding-top: 100px;">
+                <v-row>
+                    <p>TEST2</p>
+                </v-row>
+            </v-container>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            vuetify: new Vuetify(),
+            data: () => ({
+                lazy: false,
+                isActive: true,
+                isActive2: false,
+            }),
+            methods: {
+                test() {
+                    this.isActive = false;
+                    this.isActive2 = true;
+                }
+            },
+        });
+    </script>
+</body>
+
+</html>
