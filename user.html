@@ -22,6 +22,7 @@
     <style>
         * {
             font-family: 'Sarabun', sans-serif;
+            letter-spacing: -0.5px;
         }
 
         #inspire {
@@ -59,11 +60,17 @@
             border-radius: 9px !important;
         }
 
+        .bars-button-user {
+            box-shadow: none !important;
+            font-size: 18px !important;
+            justify-content: left !important;
+        }
+
         .bars-button-bell {
             padding: 0 !important;
             box-shadow: none !important;
             border-radius: 50px !important;
-            font-size: 25px !important;
+            font-size: 23px !important;
             color: #1d8649 !important;
         }
 
@@ -94,7 +101,7 @@
                     </span>
                 </div>
                 <div class="v-toolbar__items hidden-sm-and-down">
-                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button">
+                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" @click="test">
                         <p>ภาพรวม</p>
                     </v-btn>
                 </div>
@@ -196,7 +203,7 @@
                 <div class="v-toolbar__items hidden-sm-and-down">
                     <v-btn class="v-btn--flat v-btn--text theme--light bars-button" style="overflow: hidden;">
                         <p>ช่องทางการขาย</p>
-                        <svg width="90" height="50" viewBox="0 0 200 200" style="position: absolute; left: 83px; top: 5px;">
+                        <svg width="90" height="50" viewBox="0 0 200 200" style="position: absolute; left: 60px; top: 5px;">
                             <image width="200" height="200" xlink:href="img/beta.svg"/>
                         </svg>
                     </v-btn>
@@ -211,8 +218,33 @@
                     </v-btn>
                 </div>
                 <div class="spacer"></div>
-                <div class="v-toolbar__items hidden-sm-and-down" style="padding: 5px 0;">
-                    <v-btn class="bars-button-bell" style="overflow: hidden;">
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button-user" v-bind="attrs" v-on="on"
+                                style="padding: 0 15px; border-right: 2px solid #d0dadc; padding-top: 0;">
+
+                                <p style="padding-right: 8px">
+                                    <div class="v-avatar" style="height: 25px; width: 25px; margin-right: 5px;">
+                                        <img src="img/shop.png">
+                                    </div> NAME HERE  <i class="fa fa-caret-down" aria-hidden="true" style="margin-left: 5px;"></i>
+                                </p>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item :key="index" style="padding: 0 0;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                    style="height: 48px; width: 100%;" >
+                                    <p style="font-size: 18px;">
+                                        แสดงร้านค้าทั้งหมด
+                                    </p>
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </div>
+                <div class="v-toolbar__items hidden-sm-and-down">
+                    <v-btn class="bars-button-bell" icon>
                         <i class="fa fa-bell" aria-hidden="true"></i>
                     </v-btn>
                 </div>
@@ -220,7 +252,7 @@
                     <v-menu offset-y>
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn class="v-btn--flat v-btn--text theme--light bars-button-right" v-bind="attrs" v-on="on"
-                                style="padding: 0 30px;">
+                                style="padding: 0 25px;">
                                 <div class="v-avatar" style="height: 40px; width: 40px;">
                                     <img src="https://www.shareicon.net/data/128x128/2015/10/07/113615_face_512x512.png">
                                 </div>
@@ -250,6 +282,30 @@
                     </v-menu>
                 </div>
             </v-app-bar>
+                <v-container :lazy="lazy" v-if="isActive"
+                v-model="isActive" transition="fade-transition" style="padding-top: 55px;">
+                    <v-row>
+                        <v-col md="6">
+                            <v-card
+                            tile
+                            style="width: 100%; height: 180px;"
+                            >
+                            <div>
+
+                                <p style="font-size: 22px; padding: 15px;"><svg style="width:24px;height:24px; color: red;" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M17,17H15V13H17M13,17H11V7H13M9,17H7V10H9M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z" />
+                                </svg>สรุปยอดขาย</p>
+                            </div>
+                        </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+                <v-container :lazy="lazy" v-if="isActive2"
+                v-model="isActive2" transition="fade-transition" style="padding-top: 100px;">
+                    <v-row>
+                        <p>TEST2</p>
+                    </v-row>
+                </v-container>
         </v-app>
     </div>
 
@@ -260,14 +316,16 @@
             el: "#app",
             vuetify: new Vuetify(),
             data: () => ({
-                items: [
-                    { title: "Click Me" },
-                    { title: "Click Me" },
-                    { title: "Click Me" },
-                    { title: "Click Me 2" },
-                ],
+                lazy: false,
+                isActive: true,
+                isActive2: false,
             }),
-            methods: {},
+            methods: {
+                test(){
+                    this.isActive = false;
+                    this.isActive2 = true;
+                }
+            },
         });
     </script>
 </body>
