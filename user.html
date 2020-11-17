@@ -18,12 +18,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
         rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
         * {
-            font-family: 'Sarabun', sans-serif;
             letter-spacing: -0.5px;
         }
 
@@ -91,7 +89,7 @@
             border-right: 1px solid rgba(0, 0, 0, .1);
         }
 
-        .button-right{
+        .button-right {
             box-shadow: none !important;
             padding-top: 15px !important;
             font-size: 22px !important;
@@ -100,6 +98,36 @@
             color: white !important;
         }
 
+        .v-tab--active {
+            color: black !important;
+        }
+
+        .v-text-field--outlined fieldset {
+            border-color: #d9dee2 !important
+        }
+
+        .v-btn--outlined {
+            border-color: #d9dee2 !important;
+            box-shadow: none !important;
+        }
+
+        .v-application .elevation-2 {
+            box-shadow: none !important;
+        }
+
+        .v-btn {
+            min-width: 0 !important;
+        }
+
+        th{
+            font-size: 14px !important;
+        }
+
+        td{
+            font-size: 18px !important;
+        }
+
+
         @media screen and (max-width: 600px) {}
     </style>
 </head>
@@ -107,11 +135,13 @@
 <body>
     <div id="app">
         <v-app id="inspire">
+
             <v-app-bar absolute dense style="
             background-color: rgb(248, 248, 248);
             border-color: rgb(248, 248, 248);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             padding: 0px 10px;
+            font-family: 'Sarabun', sans-serif;
           ">
                 <div class="logo hidden-sm-and-down">
                     <span>
@@ -119,7 +149,7 @@
                     </span>
                 </div>
                 <div class="v-toolbar__items hidden-sm-and-down">
-                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" @click="test">
+                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" @click="to_Overview()">
                         <p>ภาพรวม</p>
                     </v-btn>
                 </div>
@@ -135,8 +165,8 @@
                         </template>
                         <v-list>
                             <v-list-item :key="index" style="padding: 0 0;">
-                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
-                                    style="height: 48px;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                    @click="to_ManageProduct()" v-bind="attrs" v-on="on" style="height: 48px;">
                                     <p style="font-size: 18px;">
                                         จัดการสินค้า
                                     </p>
@@ -305,10 +335,13 @@
                     </v-menu>
                 </div>
             </v-app-bar>
-            <div class="row wrap col-md-12 col-lg-10 col-xl-9" :lazy="lazy" v-if="isActive" v-model="isActive"
-                transition="fade-transition" style="padding-top: 55px; margin: 0 auto; padding: 55px 50px;">
+
+            <div class="row wrap col-md-12 col-lg-10 col-xl-9" :lazy="lazy" v-if="is_Overview_Active"
+                v-model="is_Overview_Active" transition="fade-transition"
+                style="padding-top: 55px; margin: 0 auto; padding: 55px 50px; font-family: 'Sarabun', sans-serif;">
                 <div class="col-lg-6">
-                    <v-card tile style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                    <v-card tile
+                        style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
                         <div>
                             <svg style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
                                 viewBox="0 0 24 24">
@@ -350,7 +383,8 @@
                     </v-card>
 
                     <v-card tile style="width: 100%; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
-                        <div class="row" style="text-align: center; color:  #1d8649; font-size: 24px; padding-top: 5px;">
+                        <div class="row"
+                            style="text-align: center; color:  #1d8649; font-size: 24px; padding-top: 5px;">
                             <div class="col-sm-6" style="border-right: 1px solid rgba(0, 0, 0, .1);">
                                 <p>แผนภาพสินค้าขายดี</p>
                             </div>
@@ -361,7 +395,8 @@
                     </v-card>
                 </div>
                 <div class="col-lg-6">
-                    <v-card tile style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                    <v-card tile
+                        style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
                         <div>
                             <svg style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
                                 viewBox="0 0 24 24">
@@ -390,9 +425,11 @@
 
                     <v-card tile style="width: 100%; margin-bottom: 20px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
                         <div>
-                                <span style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;" class="material-icons">
-                                    list_alt
-                                    </span>
+                            <span
+                                style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
+                                class="material-icons">
+                                list_alt
+                            </span>
                             <p
                                 style="font-size: 23px; padding: 15px; padding-left: 40px; margin-bottom: 0; padding-bottom: 10px;">
                                 สินค้าขายดีวันนี้</p>
@@ -407,12 +444,95 @@
                     </div>
                 </div>
             </div>
-            <v-container :lazy="lazy" v-if="isActive2" v-model="isActive2" transition="fade-transition"
-                style="padding-top: 100px;">
-                <v-row>
-                    <p>TEST2</p>
-                </v-row>
-            </v-container>
+
+            <div class="row wrap col-md-12 col-lg-10 col-xl-9" :lazy="lazy" v-if="is_Manage_Product_Active"
+                v-model="is_Manage_Product_Active" transition="fade-transition"
+                style="padding-top: 55px; margin: 0 auto; padding: 75px 90px; font-family: 'Kanit', sans-serif;">
+                <v-card tile style="width: 100%; margin-bottom: 25px; padding: 24px;">
+                    <div class="row">
+                        <div class="col-sm-4 d-flex" style="padding-top: 5px; padding-bottom: 0;">
+                            <p style="font-size: 24px; font-weight: 500; margin-bottom: 0;">จัดการสินค้า</p>
+                        </div>
+                        <div class="col-sm-8 d-flex justify-end" style="padding-top: 0; padding-bottom: 8px;">
+                            <v-tabs right light v-model="tab">
+                                <v-tabs-slider color="#1d8649"></v-tabs-slider>
+                                <v-tab class="tabs" style="font-size: 18px; letter-spacing: -0.5px; ">รายการสินค้า
+                                </v-tab>
+                                <v-tab class="tabs" style="font-size: 18px; width: 140px; letter-spacing: -0.5px;">
+                                    ประวัติ</v-tab>
+                            </v-tabs>
+                        </div>
+                        <v-tabs-items v-model="tab" class="tabs-item" style="width: 100%;">
+                            <v-tab-item :transition="false" :reverse-transition="false">
+                                <div class="row" style="padding-left: 13px;">
+                                    <div class="col-sm-12 col-md-5" style="padding-top: 0;">
+                                        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
+                                            placeholder="ชื่อสินค้า รหัสสินค้า ราคา Tag" single-line hide-details
+                                            outlined dense color="none"
+                                            style="padding-top: 0; margin-top: 0; width: 100%;"></v-text-field>
+                                    </div>
+                                    <div class="col-sm-12 col-md-7 d-flex justify-end" style="padding-top: 0;">
+                                        <v-btn elevation="2" outlined
+                                            style="padding: 8px 8px; height: 40px; margin-right: 20px;">
+                                            <img src="img/excel.svg" style="width: 25px; height: 25px;">
+                                        </v-btn>
+
+                                        <v-menu offset-y>
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-btn elevation="2" outlined
+                                                    style="padding: 8px 8px; font-size: 18px; padding-top: 25px; height: 40px; width: 130px;"
+                                                    v-bind="attrs" v-on="on">
+                                                    <p>ตัวกรอง <i class="fa fa-filter"
+                                                            style="font-size: 23px; margin-left: 10px;"
+                                                            saria-hidden="true"></i></p>
+                                                </v-btn>
+                                            </template>
+                                            <v-list>
+                                                <v-list-item :key="index" style="padding: 0 0;">
+                                                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                        @click="to_ManageProduct()" v-bind="attrs" v-on="on"
+                                                        style="height: 48px;">
+                                                        <p style="font-size: 18px;">
+                                                            จัดการสินค้า
+                                                        </p>
+                                                    </v-btn>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>
+
+                                    </div>
+                                </div>
+                                <v-data-table v-model="selected" :headers="headers" :items="item"
+                                    :single-select="singleSelect" item-key="name" :search="search" :page.sync="page" show-select
+                                    :items-per-page="`${select.itemsPerPage}`"
+                                    hide-default-footer @page-count="pageCount = $event">
+                                </v-data-table>
+                                <div class="text-center pt-2">
+                                    <v-pagination
+                                      v-model="page"
+                                      :length="pageCount"
+                                    ></v-pagination>
+                                    <div style="float: right; position: absolute; right: 0px; bottom: -25px;">
+                                        <p style="float: left;">eiei</p>
+                                        <v-select
+                                            v-model="select"
+                                            :items="items"
+                                            item-text="itemsPerPage"
+                                            label="Select"
+                                            return-object
+                                            single-line
+                                            style="width: 60px; float: left; padding-top: 0;"
+                                      ></v-select>
+                                    </div>
+                                  </div>
+                            </v-tab-item>
+                            <v-tab-item :transition="false" :reverse-transition="false">
+                                eiei2
+                            </v-tab-item>
+                        </v-tabs-items>
+                    </div>
+                </v-card>
+            </div>
         </v-app>
     </div>
 
@@ -423,14 +543,82 @@
             el: "#app",
             vuetify: new Vuetify(),
             data: () => ({
+                tab: null,
                 lazy: false,
-                isActive: true,
-                isActive2: false,
+                search: '',
+                is_Overview_Active: false,
+                is_Manage_Product_Active: true,
+
+                page: 1,
+                pageCount: 0,
+                select: { itemsPerPage: 10, },
+                items: [
+                    { itemsPerPage: 10, },
+                    { itemsPerPage: 25, },
+                    { itemsPerPage: 50, },
+                    { itemsPerPage: 100, },
+                ],
+                singleSelect: false,
+                selected: [],
+                headers: [
+                    {
+                        text: 'รูป',
+                        align: 'start',
+                        sortable: false,
+                        filterable: false,
+                        value: 'photo',
+                    },
+                    { text: 'ชื่อ', value: 'name' },
+                    { text: 'รหัส SKU', value: 'code' },
+                    { text: 'ราคา/บาท', value: 'price' },
+                    { text: 'น้ำหนัก', value: 'weight', filterable: false,},
+                    { text: 'Tag', value: 'tag' },
+                    { text: 'จำนวน', value: 'amount', filterable: false, },
+                    { text: 'จอง', value: 'booking', filterable: false, },
+                ],
+                item: [
+                    {
+                        photo: 'eiei',
+                        name: 'หห',
+                        code: '#24383419308',
+                        price: 200,
+                        weight: 10,
+                        tag: 'Test',
+                        amount: 1,
+                        booking: 1,
+                    },
+                ],
+                editedIndex: -1,
+                editedItem: {
+                    photo: '',
+                    name: '',
+                    code: '',
+                    price: 0,
+                    weight: 0,
+                    tag: '',
+                    amount: 0,
+                    booking: 0,
+                },
+                defaultItem: {
+                    photo: '',
+                    name: '',
+                    code: '',
+                    price: 0,
+                    weight: 0,
+                    tag: '',
+                    amount: 0,
+                    booking: 0,
+                },
+
             }),
             methods: {
-                test() {
-                    this.isActive = false;
-                    this.isActive2 = true;
+                to_Overview() {
+                    this.is_Overview_Active = true;
+                    this.is_Manage_Product_Active = false;
+                },
+                to_ManageProduct() {
+                    this.is_Overview_Active = false;
+                    this.is_Manage_Product_Active = true;
                 }
             },
         });
