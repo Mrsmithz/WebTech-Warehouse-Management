@@ -191,12 +191,17 @@
         height: 100%;
     }
     .page4{
+        margin-top: 10%;
         padding: 3%;
         background: #000;
         color: white;
         width: 100%;
         height: 100%;
     }
+    .form-control:focus {
+  border-color: gold;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px orangered;
+}
 
     /* .progress {
     background-color: var(--color-black);
@@ -242,6 +247,108 @@
         left: 0;
         background: #fff;
     }
+    /* Font */
+/* @import url('https://fonts.googleapis.com/css?family=Quicksand:400,700'); */
+
+/* Design */
+/* *,
+*::before,
+*::after {
+  box-sizing: border-box;
+} */
+
+/* html {
+  background-color: #ecf9ff;
+}
+
+body {
+  color: #272727;
+  font-family: 'Quicksand', serif;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  padding: 1rem;
+} */
+
+.main{
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cards_item {
+  display: flex;
+  padding: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .cards_item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 56rem) {
+  .cards_item {
+    width: 33.3333%;
+  }
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card_content {
+  padding: 1rem;
+  background: white;
+}
+
+.card_title {
+  color: black;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+  margin: 0px;
+}
+
+.card_text {
+  color:black;
+  font-weight: 100;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;    
+  font-weight: 400;
+}
+.made_by{
+  font-weight: 400;
+  font-size: 13px;
+  margin-top: 35px;
+  text-align: center;
+}
 
     #background-video { width: 640px; height: 360px; position: relative; }
     #background-video iframe { width: 100%; height: 100%; display: none; }
@@ -393,7 +500,7 @@
             </div><br><br><br><br>
             <section class="feature">
                 <div class="page2">
-                    <h2 style="padding-left: 30px; padding-right: 30px;">รู้จักฟีเจอร์ของ Fillgoods ที่ตอบโจทย์การขายอย่างครบครัน</h2>
+                    <h2 style="padding-left:30px; padding-right: 30px;">รู้จักฟีเจอร์ของ Fillgoods ที่ตอบโจทย์การขายอย่างครบครัน</h2>
                     <br><br>
                     <div id="background-video" style="background: url('img/fg-video-thumb.jpg') top center no-repeat; background-size: cover; margin: auto;" class="mb-4 col-12">
                         <!-- https://stackoverflow.com/questions/51787522/adding-image-to-the-background-youtube-video-on-iframe-tag -->
@@ -419,9 +526,9 @@
     </section><br><br><br>
 
     <section class="progess">
-        <div class="page4">
+        <div class="page4" style="font-size: 28px;">
             <div class="row">
-                <h2>ความก้าวหน้าของเรา</h2>
+                <h2>ความก้าวหน้าของเรา</h2><br><br><br>
                 <div class="col-md-4">
                     <!-- <h2>ความก้าวหน้าของเรา</h2> -->
                 <p class="subtitle"></p>
@@ -453,6 +560,55 @@
             </div>
         </div>
     </section>
+    <sectiion class="blog">
+        <div class="main">
+            <h1>Fillgoods Blog</h1>
+            <p>ศูนย์รวมข้อมูลสำหรับการทำธุรกิจบนโลกออนไลน์ เพื่อร้านค้าออนไลน์
+                ทั้งมือใหม่และมือโปร ได้เตรียมตัวสร้างยอดขายให้ปังก่อนใคร</p>
+            <ul class="cards">
+              <li class="cards_item">
+                <div class="card" style="border-radius: 5%;">
+                  <div class="card_image"><img src="img/fb.jpg"></div>
+                  <div class="card_content">
+                    <a href=""><h2 class="card_title" style="font-size: 12px; text-align: left;">รวมยี่ห้อกล้องไลฟ์สด 2021 ที่คนขายออนไลน์ต้องใช้</h2></a>
+                    <p class="card_text" style="text-align: left">เพราะการไลฟ์สดขายของกำลังมาแรงยุคนี้</p>
+                  </div>
+                </div>
+              </li>
+              <li class="cards_item">
+                <div class="card" style="border-radius: 5%;">
+                  <div class="card_image" style="width: 100%; height: 100%;"><img src="img/SEO_11.11-03-1536x1015.jpg"></div>
+                  <div class="card_content">
+                    <a href=""><h2 class="card_title" style="font-size: 12px; text-align: left;">เปิดสถิติเฟซบุ๊กที่คนขายของออนไลน์ต้องรู้ 2021</h2></a>
+                    <p class="card_text" style="text-align: left;">ถ้าจะพูดถึงอาณาจักรบนโลกออนไลน์ที่ใหญ่ที่สุดแห่งหนึ่งคงต้อง</p>
+                  </div>
+                </div>
+              </li>
+              <li class="cards_item">
+                <div class="card" style="border-radius: 5%;">
+                  <div class="card_image" style="height: 100%"><img src="img/Seminar_Facebook_Live-12.jpg"></div>
+                  <div class="card_content">
+                    <a href=""><h2 class="card_title" style="font-size: 12px; text-align: left;">Fillgoods จัดงานสัมมนาไลฟ์สดเทรนด์ขายของออนไลน์แห่งปี 2021 ไลฟ์ยังไงให้ยอดขายพุ่ง 10 เท่า</h2></a>
+                    <p class="card_text" style="text-align: left">ยุคนี้การช้อปปิ้งบนโลกออนไลน์กลายเป็นส่วนหนึ่งของคนส่วนใหญ่</p>
+                  </div>
+                </div>
+              </li>
+            </div>
+            <br><br><br>
+            <a href="">ดูทั้งหมด<img src="img/icon-arrow-right.png" class=" lazyloaded" src="img/icon-arrow-right.png"><noscript><img  data-src="img/icon-arrow-right.png" class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><noscript><img  data-src="img/icon-arrow-right.png" class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><noscript><img src="img/icon-arrow-right.png"></noscript></a>
+        </div>
+
+    </sectiion>
+    <div class="email" style="margin-top: 10%;">
+        <div class="page6">
+            <h1>E-mail : รับข่าวสาร</h1>
+            <p>สมัครรับข่าวสารและอัปเดตฟีเจอร์ใหม่ เพื่อการทำธุรกิจ</p>
+            <div class="form-group">
+                <input type="email" class="form-control" id="usr" name="username" style="width: 50%; margin: auto;">
+            <button type="submit" class="btn btn-success">Submit</button>
+              </div>
+        </div>
+    </div>
     <div class="footer"></div>
     <script>
         window.addEventListener('scroll', function() {
