@@ -15,7 +15,8 @@
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Fillgoods ระบบจัดการร้านค้าออนไลน์</title> 
+    <link rel="icon" type="image/png" href="img/cropped-fav-1-1-32x32.png"/>
 </head>
 <style>
     #navbarSupportedContent > form > a.text-dark.mr-4 {
@@ -32,6 +33,7 @@
         margin: 0;
     }
     h2 {
+        font-family: 'Kanit', sans-serif;
         font-size: calc(var(--h2-fz-m) / 10 * 1rem);
         line-height: calc(var(--h2-height-m) / var(--h2-fz-m));
         margin: 0 0 8px !important;
@@ -96,6 +98,11 @@
         width: 100%;
         padding: 10px;
     }
+    hr.hr-13 {
+        height: 10px;
+        border: 0;
+        box-shadow: 0 10px 10px -10px #8c8c8c inset;
+    }
     a {
         color: var(--color-primary);
         text-decoration: none;
@@ -152,6 +159,38 @@
         display: block;
         
     }
+    .fadedfx {
+  background-color: #fe5652;
+  visibility: hidden;
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+  -webkit-animation-name: fadeIn;
+  animation-duration: 1.5s;
+  -webkit-animation-duration: 1.5s;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-timing-function: ease-in-out;
+  visibility: visible !important;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
     section {
     margin: 24px 0 44px;
     width: 100%;
@@ -203,17 +242,6 @@
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px orangered;
 }
 
-    /* .progress {
-    background-color: var(--color-black);
-    color: var(--color-white);
-    padding: 64px 0;
-    margin-bottom: 0;
-} */
-    /* .footer {
-        background:green;
-        width: 100%;
-        height: 10vh;
-    } */
     .register {
         width: 126.46px;
         height: 43px;
@@ -247,112 +275,115 @@
         left: 0;
         background: #fff;
     }
-    /* Font */
-/* @import url('https://fonts.googleapis.com/css?family=Quicksand:400,700'); */
+    .main{
+    max-width: 1200px;
+    margin: 0 auto;
+    }
 
-/* Design */
-/* *,
-*::before,
-*::after {
-  box-sizing: border-box;
-} */
+    h1 {
+        font-size: 24px;
+        font-weight: 400;
+        text-align: center;
+    }
 
-/* html {
-  background-color: #ecf9ff;
-}
+    img {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+    }
 
-body {
-  color: #272727;
-  font-family: 'Quicksand', serif;
-  font-style: normal;
-  font-weight: 400;
-  letter-spacing: 0;
-  padding: 1rem;
-} */
+    .cards {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    }
 
-.main{
-  max-width: 1200px;
-  margin: 0 auto;
-}
+    .cards_item {
+    display: flex;
+    padding: 1rem;
+    }
 
-h1 {
-    font-size: 24px;
+    @media (min-width: 40rem) {
+    .cards_item {
+        width: 50%;
+    }
+    }
+
+    @media (min-width: 56rem) {
+    .cards_item {
+        width: 33.3333%;
+    }
+    }
+
+    .card {
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    }
+
+    .card_content {
+    padding: 1rem;
+    background: white;
+    }
+
+    .card_title {
+    color: black;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    margin: 0px;
+    }
+
+    .card_text {
+    color:black;
+    font-weight: 100;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;    
     font-weight: 400;
+    }
+    .made_by{
+    font-weight: 400;
+    font-size: 13px;
+    margin-top: 35px;
     text-align: center;
+    }
+    
+    .carousel-indicators li {
+    border-radius: 12px;
+    width: 12px;
+    height: 12px;
+    background-color: #404040;
+}
+.carousel-indicators li {
+    border-radius: 12px;
+    width: 12px;
+    height: 12px;
+    background-color: #404040;
+}
+.carousel-indicators .active {
+    background-color: white;
+    max-width: 12px;
+    margin: 0 3px;
+    height: 12px;
+}
+.carousel-control-prev-icon {
+ background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
 }
 
-img {
-  height: auto;
-  max-width: 100%;
-  vertical-align: middle;
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
 
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cards_item {
-  display: flex;
-  padding: 1rem;
-}
-
-@media (min-width: 40rem) {
-  .cards_item {
-    width: 50%;
-  }
-}
-
-@media (min-width: 56rem) {
-  .cards_item {
-    width: 33.3333%;
-  }
-}
-
-.card {
-  background-color: white;
-  border-radius: 0.25rem;
-  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.card_content {
-  padding: 1rem;
-  background: white;
-}
-
-.card_title {
-  color: black;
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: capitalize;
-  margin: 0px;
-}
-
-.card_text {
-  color:black;
-  font-weight: 100;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  margin-bottom: 1.25rem;    
-  font-weight: 400;
-}
-.made_by{
-  font-weight: 400;
-  font-size: 13px;
-  margin-top: 35px;
-  text-align: center;
-}
-
-    #background-video { width: 640px; height: 360px; position: relative; }
-    #background-video iframe { width: 100%; height: 100%; display: none; }
-    #background-video .play-btn { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; font-size: 0px; line-height: 0px; background: url(http://www.legacycitychurch.com/media/cover_art/Play%20Button%20Overlay/playbutton.png) center center no-repeat; background-size: 120px auto; }
+        #background-video { width: 640px; height: 360px; position: relative; }
+        #background-video iframe { width: 100%; height: 100%; display: none; }
+        #background-video .play-btn { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; font-size: 0px; line-height: 0px; background: url(http://www.legacycitychurch.com/media/cover_art/Play%20Button%20Overlay/playbutton.png) center center no-repeat; background-size: 120px auto; }
 </style>
 <body>
     <div class="bg_top">
@@ -603,13 +634,73 @@ img {
         <div class="page6">
             <h1>E-mail : รับข่าวสาร</h1>
             <p>สมัครรับข่าวสารและอัปเดตฟีเจอร์ใหม่ เพื่อการทำธุรกิจ</p>
-            <div class="form-group">
-                <input type="email" class="form-control" id="usr" name="username" style="width: 50%; margin: auto;">
-            <button type="submit" class="btn btn-success">Submit</button>
-              </div>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-5">
+                        <input type="email" class="form-control" id="usr" name="username">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success form-control" type="submit" id="button">รับข่าวสาร</button>
+                </div>
+            </div>
+                </div>
+            </div>
+            <br><br><br>
+            <hr class="hr">
+    <div class="feedback">
+        <div class="page7">
+            <h1>เสียงตอบรับจากผู้ใช้ระบบของเรา</h1>
+            <body class="grey lighten-2">
+                <div class="container">
+                    <div class="row">
+                    <div class="col-md-6">
+                  <!-- <div class="col s12 m7"> -->
+                    <!-- <div class="card horizontal"> -->
+                        <div id="background-video" style="background: url('img/youtube_thum_TOA-copy-8.jpg') top center no-repeat; background-size: cover; margin: auto;" class="mb-4 col-12">
+                            <!-- https://stackoverflow.com/questions/51787522/adding-image-to-the-background-youtube-video-on-iframe-tag -->
+                            <iframe width="295" height="222" src="https://youtu.be/ntAdO1oiqB8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+                            </iframe>
+                            <a class="play-btn" href="#">Play Button</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        
+                    </div>
+                    </div>
+    <hr class="hr"><br><br>
+    <div class="growth">
+        <div class="page8">
+            <h1>เติบโตไปกับเรา</h1>
+            <p>เพื่อเสริมการขาย ขนส่ง และการทำธุรกิจอย่างคล่องตัวยิ่งกว่าเดิม</p>
+            <a href="loginn.html" class="btn btn_green" style="margin-top: 2%; width: 200px;">สมัครใช้งาน</a>
         </div>
     </div>
-    <div class="footer"></div>
+    <hr class="hr" style="margin-bottom: 3%;"><br><br>
+    <div class="footer">
+        <div class="page9">
+            <div class="row">
+                <div class="col-md-6" style="text-align: left;">
+                    <h2>Fillgoods Company</h2>
+                    <p>21 ซอย นราธิวาสราชนครินทร์ 8 แขวง ทุ่งวัดดอน เขต สาทร กรุงเทพมหานคร 10120, ประเทศไทย
+                        โทรศัพท์: 063 535 7404</p>
+                </div>
+                <div class="col-md-6">
+                <div class="row" style="text-align: right;">
+                <div class="col-md-6" style="text-align: center;">
+                    <h2>You can get Fillgoods app at below store</h2>
+                    <img alt="" data-src="img/icon-appstore.png" class=" ls-is-cached lazyloaded" src="img/icon-appstore.png">
+                        <img alt="" data-src="img/icon-ggPlay.png" class=" ls-is-cached lazyloaded" src="img/icon-ggPlay.png">
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            
+
+
+        </div>
+    </div>
+    </div>
     <script>
         window.addEventListener('scroll', function() {
             let navbar = document.querySelector('#navBar');
@@ -622,6 +713,17 @@ img {
             jQuery('#background-video').find('iframe').show();
             jQuery('#background-video').find('iframe')[0].src += "?autoplay=1";
         });
+
+        $(window).scroll(function() {
+		$('.fadedfx').each(function(){
+		var imagePos = $(this).offset().top;
+
+		var topOfWindow = $(window).scrollTop();
+			if (imagePos < topOfWindow+500) {
+				$(this).addClass("fadeIn");
+			}
+		});
+	});
     </script>
 </body>
 </html>
