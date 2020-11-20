@@ -18,12 +18,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
         rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
         * {
-            font-family: 'Sarabun', sans-serif;
             letter-spacing: -0.5px;
         }
 
@@ -91,13 +89,72 @@
             border-right: 1px solid rgba(0, 0, 0, .1);
         }
 
-        .button-right{
+        .button-right {
             box-shadow: none !important;
             padding-top: 15px !important;
             font-size: 22px !important;
             background-color: #1d8649 !important;
             border-radius: 2px !important;
             color: white !important;
+        }
+
+        .v-tab--active {
+            color: black !important;
+        }
+
+        .v-text-field--outlined fieldset {
+            border-color: #d9dee2 !important
+        }
+
+        .v-btn--outlined {
+            border-color: #d9dee2 !important;
+            box-shadow: none !important;
+        }
+
+        .v-application .elevation-2 {
+            box-shadow: none !important;
+        }
+
+        .v-btn {
+            min-width: 0 !important;
+        }
+
+        th {
+            font-size: 14px !important;
+        }
+
+        td {
+            font-size: 18px !important;
+        }
+
+        .add-item {
+            max-height: 70vh;
+            overflow: scroll;
+            overflow-x: hidden;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .v-list-item {
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .border-green {
+            border: 1px solid #1d8649 !important;
+            box-shadow: none !important;
+        }
+
+        .v-pagination__item {
+            background-color: #1d8649 !important;
         }
 
         @media screen and (max-width: 600px) {}
@@ -107,11 +164,13 @@
 <body>
     <div id="app">
         <v-app id="inspire">
+
             <v-app-bar absolute dense style="
             background-color: rgb(248, 248, 248);
             border-color: rgb(248, 248, 248);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             padding: 0px 10px;
+            font-family: 'Sarabun', sans-serif;
           ">
                 <div class="logo hidden-sm-and-down">
                     <span>
@@ -119,7 +178,7 @@
                     </span>
                 </div>
                 <div class="v-toolbar__items hidden-sm-and-down">
-                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" @click="test">
+                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button" @click="to_Overview()">
                         <p>ภาพรวม</p>
                     </v-btn>
                 </div>
@@ -135,8 +194,8 @@
                         </template>
                         <v-list>
                             <v-list-item :key="index" style="padding: 0 0;">
-                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
-                                    style="height: 48px;">
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                    @click="to_ManageProduct()" v-bind="attrs" v-on="on" style="height: 48px;">
                                     <p style="font-size: 18px;">
                                         จัดการสินค้า
                                     </p>
@@ -158,7 +217,7 @@
                         <v-list>
                             <v-list-item :key="index" style="padding: 0 0;">
                                 <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
-                                    style="height: 48px; width: 100%;">
+                                    @click="to_Orders()" style="height: 48px; width: 100%;">
                                     <p style="font-size: 18px;">
                                         รายการ
                                     </p>
@@ -305,10 +364,13 @@
                     </v-menu>
                 </div>
             </v-app-bar>
-            <div class="row wrap col-md-12 col-lg-10 col-xl-9" :lazy="lazy" v-if="isActive" v-model="isActive"
-                transition="fade-transition" style="padding-top: 55px; margin: 0 auto; padding: 55px 50px;">
+
+            <div class="row wrap col-md-12 col-lg-10 col-xl-9" :lazy="lazy" v-if="is_Overview_Active"
+                v-model="is_Overview_Active" transition="fade-transition"
+                style="padding-top: 55px; margin: 0 auto; padding: 55px 50px; font-family: 'Sarabun', sans-serif;">
                 <div class="col-lg-6">
-                    <v-card tile style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                    <v-card tile
+                        style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
                         <div>
                             <svg style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
                                 viewBox="0 0 24 24">
@@ -350,7 +412,8 @@
                     </v-card>
 
                     <v-card tile style="width: 100%; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
-                        <div class="row" style="text-align: center; color:  #1d8649; font-size: 24px; padding-top: 5px;">
+                        <div class="row"
+                            style="text-align: center; color:  #1d8649; font-size: 24px; padding-top: 5px;">
                             <div class="col-sm-6" style="border-right: 1px solid rgba(0, 0, 0, .1);">
                                 <p>แผนภาพสินค้าขายดี</p>
                             </div>
@@ -361,7 +424,8 @@
                     </v-card>
                 </div>
                 <div class="col-lg-6">
-                    <v-card tile style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                    <v-card tile
+                        style="width: 100%; height: 180px; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
                         <div>
                             <svg style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
                                 viewBox="0 0 24 24">
@@ -390,9 +454,11 @@
 
                     <v-card tile style="width: 100%; margin-bottom: 20px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
                         <div>
-                                <span style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;" class="material-icons">
-                                    list_alt
-                                    </span>
+                            <span
+                                style="width:24px;height:24px; color: #1d8649; position: absolute; top: 22px; left: 15px;"
+                                class="material-icons">
+                                list_alt
+                            </span>
                             <p
                                 style="font-size: 23px; padding: 15px; padding-left: 40px; margin-bottom: 0; padding-bottom: 10px;">
                                 สินค้าขายดีวันนี้</p>
@@ -407,12 +473,783 @@
                     </div>
                 </div>
             </div>
-            <v-container :lazy="lazy" v-if="isActive2" v-model="isActive2" transition="fade-transition"
-                style="padding-top: 100px;">
-                <v-row>
-                    <p>TEST2</p>
-                </v-row>
-            </v-container>
+
+            <div class="row wrap col-md-12 col-lg-10 col-xl-9" :lazy="lazy" v-if="is_Manage_Product_Active"
+                v-model="is_Manage_Product_Active" transition="fade-transition"
+                style="padding-top: 55px; margin: 0 auto; padding: 75px 90px; font-family: 'Kanit', sans-serif;">
+                <v-card tile style="width: 100%; margin-bottom: 25px; padding: 24px;">
+                    <div class="row">
+                        <div class="col-sm-4 d-flex" style="padding-top: 5px; padding-bottom: 0;">
+                            <p style="font-size: 24px; font-weight: 500; margin-bottom: 0;">จัดการสินค้า</p>
+                        </div>
+                        <div class="col-sm-8 d-flex justify-end" style="padding-top: 0; padding-bottom: 8px;">
+                            <v-tabs right light v-model="tab">
+                                <v-tabs-slider color="#1d8649"></v-tabs-slider>
+                                <v-tab class="tabs" style="font-size: 18px; letter-spacing: -0.5px; ">รายการสินค้า
+                                </v-tab>
+                                <v-tab class="tabs" style="font-size: 18px; width: 140px; letter-spacing: -0.5px;">
+                                    ประวัติ</v-tab>
+                            </v-tabs>
+                        </div>
+                        <v-tabs-items v-model="tab" class="tabs-item" style="width: 100%;">
+                            <v-tab-item :transition="false" :reverse-transition="false">
+                                <div class="row" style="padding-left: 13px;">
+                                    <div class="col-sm-12 col-md-5" style="padding-top: 0;">
+                                        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
+                                            placeholder="ชื่อสินค้า รหัสสินค้า ราคา Tag" single-line hide-details
+                                            outlined dense color="none"
+                                            style="padding-top: 0; margin-top: 0; width: 100%;"></v-text-field>
+                                    </div>
+                                    <div class="col-sm-12 col-md-7 d-flex justify-end" style="padding-top: 0;">
+
+
+                                        <v-menu offset-y>
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-btn elevation="2" outlined v-bind="attrs" v-on="on"
+                                                    style="padding: 8px 8px; height: 40px; margin-right: 20px;">
+                                                    <img src="img/excel.svg" style="width: 25px; height: 25px;">
+                                                </v-btn>
+
+                                            </template>
+
+                                            <v-list class="border-green">
+                                                <v-list-item :key="index" style="padding: 0 0;">
+                                                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                        v-bind="attrs" v-on="on" style="height: 48px;">
+                                                        <p style="font-size: 18px;">
+                                                            ส่งออกสินค้า
+                                                        </p>
+                                                    </v-btn>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>
+
+                                        <!--<v-menu offset-y>
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-btn elevation="2" outlined
+                                                    style="padding: 8px 8px; font-size: 18px; padding-top: 25px; height: 40px; width: 130px; margin-right: 20px;"
+                                                    v-bind="attrs" v-on="on">
+                                                    <p>ตัวกรอง <i class="fa fa-filter"
+                                                            style="font-size: 23px; margin-left: 10px;"
+                                                            saria-hidden="true"></i></p>
+                                                </v-btn>
+                                            </template>
+
+                                            <v-list class="border-green">
+                                                <v-list-item :key="index" style="padding: 0 0;">
+                                                    <div class="row wrap" style="width: 350px;">
+                                                        <div class="d-flex col-xs-6 px-4">
+                                                            <v-checkbox v-model="checkbox" :label="`สินค้าย่อย`"
+                                                                style="font-size: 20px;" color="#1d8649">
+                                                            </v-checkbox>
+                                                        </div>
+                                                        <v-checkbox v-model="checkbox" :label="`สินค้าหลัก`"
+                                                            style="font-size: 20px;" color="#1d8649">
+                                                        </v-checkbox>
+                                                    </div>
+                                                </v-list-item>
+
+                                                <v-list-item :key="index" style="padding: 0 0;">
+                                                    <v-checkbox v-model="checkbox" :label="`มีสินค้า`"
+                                                        style="font-size: 20px;" color="#1d8649">
+                                                    </v-checkbox>
+                                                    <v-checkbox v-model="checkbox" :label="`ไม่มีสินค้า`"
+                                                        style="font-size: 20px;" color="#1d8649">
+                                                    </v-checkbox>
+                                                </v-list-item>
+
+                                                <v-list-item :key="index" style="padding: 0 0;">
+                                                    <v-checkbox v-model="checkbox" :label="`นับสินค้า`"
+                                                        style="font-size: 20px;" color="#1d8649">
+                                                    </v-checkbox>
+                                                    <v-checkbox v-model="checkbox" :label="`ไม่นับสินค้า`"
+                                                        style="font-size: 20px;" color="#1d8649">
+                                                    </v-checkbox>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>-->
+
+                                        <v-dialog v-model="dialog" max-width="98vw" max-height="95vh">
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"
+                                                    style="font-size: 18px; height: 40px; width: 130px; background-color: #1d8649 !important;">
+                                                    <i class="fa fa-plus" style="font-size: 20px; margin-right: 5px;"
+                                                        saria-hidden="true"></i>สร้างสินค้า
+                                                </v-btn>
+                                            </template>
+                                            <v-card style="font-family: 'Kanit', sans-serif; padding: 15px;">
+                                                <v-card-title>
+                                                    <p style="font-size: 25px;">สร้างสินค้า</p>
+                                                </v-card-title>
+
+                                                <v-card-text class="add-item" style=" color: black;">
+                                                    <div class="row" style="border-top: 1.5px solid rgba(0, 0, 0, .1);">
+                                                        <div class="col-md-2 col-sm-3">
+                                                            <p style="font-size: 18px;">รายละเอียดสินค้า</p>
+                                                        </div>
+                                                        <div class="col-md-10 col-sm-9"
+                                                            style="padding: 10px 0px 0px 14vw;">
+
+                                                            <div class="row" style="padding-top: 15px;">
+                                                                <p
+                                                                    style="font-size: 15px; width: 100%; margin-bottom: 10px; padding-left: 20px; color: #666;">
+                                                                    รูปสินค้า</p>
+                                                                <button
+                                                                    style="width: 220px; height: 210px; border-style: dotted; border-color: #dadce0; color: #666666;"><i
+                                                                        class="fa fa-plus" style="font-size: 80px;"
+                                                                        saria-hidden="true"></i><br>เพิ่มรูปสินค้า</button>
+                                                            </div>
+
+                                                            <div class="row" style="padding-top: 30px;">
+                                                                <div class="col-md-8 col-sm-9 col-xs-12"
+                                                                    style="padding: 0;">
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        ชื่อสินค้า</p>
+                                                                    <v-text-field placeholder="ชื่อสินค้า" single-line
+                                                                        hide-details outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    </v-text-field>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row" style="padding-top: 30px;">
+                                                                <div class="col-md-8 col-sm-9 col-xs-12"
+                                                                    style="padding: 0;">
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        ชนิดของสินค้า</p>
+                                                                    <v-text-field placeholder="ชนิดของสินค้า"
+                                                                        single-line hide-details outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    </v-text-field>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row" style="padding-top: 20px;">
+                                                                <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                    style="padding: 0; padding-right: 25px;">
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        ราคา</p>
+                                                                    <v-text-field type="number" value="0.00"
+                                                                        placeholder="0.00" single-line hide-details
+                                                                        outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    </v-text-field>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                    style="padding: 0;">
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        จำนวน</p>
+                                                                    <v-text-field type="number" value="0"
+                                                                        placeholder="0" single-line hide-details
+                                                                        outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    </v-text-field>
+                                                                </div>
+                                                                <div class="col-md-2 col-sm-3 col-xs-5 d-flex align-center"
+                                                                    style="padding: 0; padding-top: 25px; padding-left: 5px;">
+                                                                    <v-checkbox v-model="checkbox" :label="`นับสต๊อก`"
+                                                                        style="font-size: 20px;" color="#1d8649">
+                                                                    </v-checkbox>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row" style="padding-top: 20px;">
+                                                                <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                    style="padding: 0; padding-right: 25px;">
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        น้ำหนัก</p>
+                                                                    <v-text-field type="number" placeholder="0.00"
+                                                                        single-line hide-details outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    </v-text-field>
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
+                                                                        กรัม</p>
+
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                    style="padding: 0; position: relative;">
+                                                                    <span
+                                                                        style="position: absolute; margin: 37.5px -18px; font-size: 26px;">=</span>
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        น้ำหนัก</p>
+                                                                    <v-text-field type="number" placeholder="0.00"
+                                                                        single-line hide-details outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    </v-text-field>
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
+                                                                        กิโลกรัม</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <!--<div class="row" style="padding-top: 0px;">
+                                                                <div class="col-md-8 col-sm-9 col-xs-12"
+                                                                    style="padding: 0;">
+                                                                    <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        Tag</p>
+                                                                    <v-select :items="tag_items" placeholder="Tag"
+                                                                        outlined style="background-color: #fafafa; font-size: 18px;"></v-select>
+                                                                </div>
+                                                            </div>-->
+                                                        </div>
+
+                                                        <!--<div class="row flex justify-center"
+                                                            style="margin-bottom: 10px;">
+
+                                                            <v-btn class="v-btn--flat v-btn--text theme--light"
+                                                                style="box-shadow: none; font-size: 15px ; padding-top: 15px; color: #1d8649;">
+                                                                <p>STOCK ADVANCE <i class="fa fa-caret-down"
+                                                                        aria-hidden="true"></i></p>
+                                                            </v-btn>
+
+                                                            <v-btn class="v-btn--flat v-btn--text theme--light"
+                                                                style="box-shadow: none; font-size: 15px ; padding-top: 15px; color: #1d8649; display: none;">
+                                                                <p>STOCK ADVANCE <i class="fa fa-caret-up"
+                                                                        aria-hidden="true"></i></p>
+                                                            </v-btn>
+                                                        </div>-->
+
+                                                        <!--<div class="row"
+                                                            style="border-top: 1.5px solid rgba(0, 0, 0, .1); width: 100%; padding-top: 10px;">
+
+                                                            <div class="col-md-2 col-sm-3">
+                                                                <p style="font-size: 18px;">รายละเอียดขั้นสูง</p>
+                                                            </div>
+                                                            <div class="col-md-10 col-sm-9"
+                                                                style="padding: 0px 0px 0px 14vw; ">
+
+                                                                <div class="row" style="padding-top: 0px;">
+                                                                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 0px; padding-bottom: 0px;">
+                                                                        <v-checkbox v-model="checkbox" :label="`AUTO-SKU`"
+                                                                        style="padding-top: 0px;"  color="#1d8649">
+                                                                    </v-checkbox>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row" style="padding-top: 0px;">
+                                                                    <div class="col-md-8 col-sm-9 col-xs-12"
+                                                                        style="padding: 0;">
+                                                                        <p
+                                                                            style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                            SKU</p>
+                                                                        <v-text-field placeholder="#24383422100" single-line
+                                                                            hide-details outlined color="none"
+                                                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                        </v-text-field>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row" style="padding-top: 0px;">
+                                                                    <div class="col-md-1 col-sm-1 col-xs-3 d-flex align-center justify-center" style="padding: 0;">
+                                                                        <v-tooltip top style="padding: 0; ">
+                                                                            <template v-slot:activator="{ on, attrs }">
+                                                                                <svg style="width:32px;height:32px; color: #1d8649;" viewBox="0 0 24 24" v-bind="attrs"
+                                                                                v-on="on">
+                                                                                    <path fill="currentColor" d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
+                                                                                </svg>
+                                                                            </template>
+                                                                            <span style="font-family: 'Kanit', sans-serif; font-size: 13px;">ประเภทราคา <br>
+                                                                                ผู้ใช้สามารถตั้งค่าราคาสินค้าได้ ดังนี้ <br>
+                                                                                เปลี่ยนได้ คือ สามารถแก้ไขราคาสินค้าตอนสร้างออเดอร์ได้ <br>
+                                                                                เปลี่ยนไม่ได้ คือ ไม่สามารถแก้ไขราคาสินค้าตอนสร้างออเดอร์ได้
+                                                                            </span>
+                                                                          </v-tooltip>
+
+                                                                    </div>
+                                                                    <div class="col-md-7 col-sm-8 col-xs-9" style="padding-left: 0;">
+                                                                        <p
+                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                        ประเภทราคา</p>
+                                                                    <v-select :items="price_items" placeholder="เลือกประเภทราคา"
+                                                                        outlined style="background-color: #fafafa; font-size: 18px;"></v-select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row" style="padding-top: 0px;">
+                                                                    <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                        style="padding: 0; padding-right: 25px;">
+                                                                        <p
+                                                                            style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                            ต้นทุน</p>
+                                                                        <v-text-field type="number" placeholder="0.00"
+                                                                            single-line hide-details outlined color="none"
+                                                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                        </v-text-field>
+
+                                                                    </div>
+                                                                    <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                        style="padding: 0; position: relative;">
+                                                                        <p
+                                                                            style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                            เวลาที่ใช้สั่งสินค้า</p>
+                                                                        <v-text-field type="number" placeholder="0"
+                                                                            single-line hide-details outlined color="none"
+                                                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                        </v-text-field>
+                                                                        <p
+                                                                            style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; margin-bottom: 0px; text-align: right;">
+                                                                            วัน</p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row" style="padding-top: 0px;">
+                                                                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 0px; padding-bottom: 0px;">
+                                                                        <v-checkbox v-model="checkbox" :label="`VAT`"
+                                                                        style="padding-top: 0px;"  color="#1d8649">
+                                                                    </v-checkbox>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>>-->
+
+                                                    </div>
+                                                </v-card-text>
+
+                                                <v-card-actions class="flex justify-center">
+                                                    <v-btn outlined
+                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px;">
+                                                        <p>ยกเลิก</p>
+                                                    </v-btn>
+                                                    <v-btn outlined
+                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px; background-color: #1d8649; color: white;">
+                                                        <p>บันทึก</p>
+                                                    </v-btn>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </v-dialog>
+
+                                        <v-menu offset-y>
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-btn elevation="2" outlined
+                                                    style="padding: 8px 8px; font-size: 18px; padding-top: 25px; height: 40px; width: 80px; margin-left: 20px; margin-right: 20px;"
+                                                    v-bind="attrs" v-on="on">
+                                                    <p>จัดการ<i class="fa fa-angle-down" style="font-size: 25px; "
+                                                            saria-hidden="true"></i></p>
+                                                </v-btn>
+                                            </template>
+
+                                            <v-list class="border-green">
+                                                <v-list-item :key="index" style="padding: 0 0;">
+                                                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                        v-bind="attrs" v-on="on" style="height: 48px;">
+                                                        <p style="font-size: 18px;">
+                                                            Merge
+                                                        </p>
+                                                    </v-btn>
+                                                </v-list-item>
+                                                <v-list-item :key="index" style="padding: 0 0;">
+                                                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                        v-bind="attrs" v-on="on" style="height: 48px;">
+                                                        <p style="font-size: 18px;">
+                                                            Delete
+                                                        </p>
+                                                    </v-btn>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>
+
+                                    </div>
+                                </div>
+                                <v-data-table v-model="selected" :headers="headers" :items="item"
+                                    :single-select="singleSelect" item-key="name" :search="search" :page.sync="page"
+                                    show-select :items-per-page="`${select.itemsPerPage}`" text-left hide-default-footer
+                                    @page-count="pageCount = $event">
+                                </v-data-table>
+                                <div class="text-center pt-2">
+                                    <v-pagination circle color="green darken-3" style="box-shadow: none" v-model="page"
+                                        :length="pageCount"></v-pagination>
+                                    <div style="float: right; position: absolute; right: 0px; bottom: -25px;">
+                                        <p
+                                            style="float: left; position: absolute; right: 70px; white-space: nowrap; top: 10px;">
+                                            จำนวนต่อหน้า</p>
+                                        <v-select v-model="select" :items="items" item-text="itemsPerPage"
+                                            label="Select" return-object single-line text-left
+                                            style="width: 60px; float: left; padding-top: 0;"></v-select>
+                                    </div>
+                                </div>
+                            </v-tab-item>
+                            <v-tab-item :transition="false" :reverse-transition="false">
+                                eiei2
+                            </v-tab-item>
+                        </v-tabs-items>
+                    </div>
+                </v-card>
+            </div>
+
+            <div :lazy="lazy" v-if="is_Orders_Active" v-model="is_Orders_Active" transition="fade-transition"
+                style=" padding: 50px 30px; font-family: 'Sarabun', sans-serif;">
+
+                <div class="row" style="height: 50px;">
+                    <div class="col-md-7 col-sm-8 col-xs-12">
+                        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
+                            placeholder="เลขออเดอร์, เลขแทร๊กกิ้ง, ชื่อ, เบอร์โทร, สถานะการจ่ายเงิน, ปริ้นท์ (พิมพ์ print, noprint, reprint), ผู้จัดส่ง"
+                            single-line hide-details outlined dense
+                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: white;"></v-text-field>
+                    </div>
+                </div>
+
+                <div class="row" style="width: 100%; padding-left: 13px; margin-right: 0px; margin-top: 15px;">
+                    <v-card
+                        style="width: 100%; padding: 24px; box-shadow: 0 0 10px rgba(0,0,0,.1); border-radius: 5px; padding-top: 15px; padding-bottom: 5px;">
+                        <div class="row">
+                            <div class="d-flex col-md-9 col-sm12" style="padding: 5px;">
+                                <v-btn style="overflow: hidden; padding-top: 0; box-shadow: none !important;
+                                    font-size: 18px !important;
+                                    padding-top: 15px !important;
+                                    background-color: #1d8649 !important;
+                                    color: white !important;
+                                    border-radius: 6px !important;
+                                    height: 65px; margin-right: 10px;">
+                                    <i class="fa fa-plus-circle"
+                                        style="margin-top: -15px; font-size: 22px; margin-right: 5px;"
+                                        aria-hidden="true"></i>
+                                    <p>สร้างออเดอร์</p>
+                                </v-btn>
+                                <div class="d-inline-block">
+                                <v-btn style="overflow: hidden; padding-top: 0; box-shadow: none !important;
+                                    font-size: 18px !important;
+                                    padding-top: 15px !important;
+                                    background-color: #525152 !important;
+                                    color: white !important;
+                                    border-radius: 6px !important;
+                                    margin-right: 10px;
+                                    margin-bottom: 8px;">
+                                    <p>ทั้งหมด<span style="background-color: #fff; color: #424143; border-radius: 10px; padding: 0 .4rem; margin-left: 5px;">0</span></p>
+                                </v-btn>
+
+                                <v-menu offset-y>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; border-color: #424143 !important;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>รอดำเนินการ<span style="background-color: #424143; color: #fff; border-radius: 10px; padding: 0 .4rem; margin-left: 5px; margin-right: 2.5px">0</span><i class="fa fa-angle-down" style="font-size: 25px; "
+                                                    saria-hidden="true"></i></p>
+                                        </v-btn>
+                                    </template>
+
+                                    <v-list>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ทั้งหมด (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    เก็บเงินปลายทาง (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    รอโอนเงิน (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    โอนเงินแล้ว (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    เคลม (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+
+                                <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; border-color: #424143 !important;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>เตรียมตัวส่ง<span style="background-color: #424143; color: #fff; border-radius: 10px; padding: 0 .4rem; margin-left: 5px; margin-right: 2.5px">0</span></p>
+                                </v-btn>
+
+                                <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; border-color: #424143 !important;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>พร้อมจัดส่ง<span style="background-color: #424143; color: #fff; border-radius: 10px; padding: 0 .4rem; margin-left: 5px; margin-right: 2.5px">0</span></p>
+                                </v-btn>
+
+                                <v-menu offset-y>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; border-color: #424143 !important;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>กำลังจัดส่ง<span style="background-color: #424143; color: #fff; border-radius: 10px; padding: 0 .4rem; margin-left: 5px; margin-right: 2.5px">0</span><i class="fa fa-angle-down" style="font-size: 25px; "
+                                                    saria-hidden="true"></i></p>
+                                        </v-btn>
+                                    </template>
+
+                                    <v-list>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ทั้งหมด (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ขนส่งรับสินค้าเข้าคลังแล้ว (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    พัสดุกำลังนำส่ง (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ส่งไม่สำเร็จ (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ไม่ทราบสถานะ (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+
+                                <v-menu offset-y>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; border-color: #424143 !important;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>สำเร็จ<span style="background-color: #424143; color: #fff; border-radius: 10px; padding: 0 .4rem; margin-left: 5px; margin-right: 2.5px">0</span><i class="fa fa-angle-down" style="font-size: 25px; "
+                                                    saria-hidden="true"></i></p>
+                                        </v-btn>
+                                    </template>
+
+                                    <v-list>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ทั้งหมด (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ส่งสำเร็จแล้ว (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ถูกตีกลับ (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ได้รับเงินแล้ว (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+
+                                <v-dialog v-model="dialog" max-width="500px" max-height="95vh">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn icon v-bind="attrs" v-on="on" style="margin-bottom: 8px; margin-right: 10px;">
+                                            <span style="width: 22.5px; height: 22.5px;background-color: #424143; color: #fff; border-radius: 10px; padding: 0 .4rem; font-size: 15px;">i</span>
+                                        </v-btn>
+                                    </template>
+                                    <v-card style="font-family: 'Sarabun', sans-serif;">
+                                        <v-card-title style="background-color: #08a7a3; padding: 10px 10px;">
+                                            <p style="font-size: 18px; margin-bottom: 0px; color: white;">
+                                                <span style="background-color: white; color:#08a7a3; border-radius: 10px; padding: 0 .6rem; margin-right: 2.5px">i</span>
+                                                คำอธิบาย</p>
+                                        </v-card-title>
+
+                                        <v-card-text class="add-item" style=" color: black; padding: 15px 15px; font-size: 18px;">
+                                            <p style="margin-bottom: 5px; color: #08a7a3;"><b>All (ทั้งหมด)</b></p>
+                                            <p style="margin-bottom: 25px;">จำนวนออเดอร์รวมทั้งหมดในช่วงเวลาที่ทำการค้นหาไว้(ค่าเริ่มต้นคือ 14 วัน ย้อนหลังจากวันที่ปัจจุบัน)</p>
+
+                                            <p style="margin-bottom: 5px; color: #08a7a3;"><b>Pending (รอดำเนินการ)</b></p>
+                                            <p style="margin-bottom: 25px;">สถานะของออเดอร์ที่สร้างเสร็จแล้ว และรอการจัดการต่อ</p>
+
+                                            <p style="margin-bottom: 5px; color: #08a7a3;"><b>Prepare to ship (เตรียมตัวส่ง)</b></p>
+                                            <p style="margin-bottom: 25px;">สถานะการเตรียมส่งออเดอร์ ใช้ในการแยกว่า ออเดอร์ไหนได้มีการปริ้นไปปะหน้า (Shiping label)เพื่อเตรียมตัวส่งแล้ว</p>
+
+                                            <p style="margin-bottom: 5px; color: #08a7a3;"><b>Ready to ship (พร้อมจัดส่ง)</b></p>
+                                            <p style="margin-bottom: 25px;">สถานะที่บอกว่า ออเดอร์พร้อมจัดส่งแล้ว สถานะนี้ควรจะเป็น 0 ในทุกๆ วันหลังขนส่ง มารับ สถานะนี้ใช้เพื่อตรวจสอบว่าสินค้ามีการสูญหาย หลังจากขนส่งรับไปหรือไม่</p>
+
+                                            <p style="margin-bottom: 25px; color: #08a7a3;"><b>In Transit (อยู่ในระหว่างการจัดส่ง) เป็นสถานะที่บอกว่าสินค้ากำลังถูกจัดส่ง โดยสามารถแยกเป็น</b></p>
+
+                                            <p style="margin-bottom: 5px;"><b>Shipped (ส่งแล้ว)</b></p>
+                                            <p style="margin-bottom: 25px;">เป็นสถานะที่บอกว่าขนส่งรับเข้าคลังไปแล้ว มั่นใจได้เลยว่าสินค้าถึงมือขนส่งแล้วแน่นอน และสามารถใช้ตรวจสอบได้ว่า สินค้าที่ส่งไปแล้วที่ยังค้างอยู่ที่คลังสินค้าของขนส่งมี รายการไหนบ้าง</p>
+
+                                            <p style="margin-bottom: 5px;"><b>Out for delivery (ของถูกส่งออกไปแล้ว)</b></p>
+                                            <p style="margin-bottom: 25px;">พัสดุกำลังจัดส่ง</p>
+
+                                            <p style="margin-bottom: 5px;"><b>Fail to Delivery (ส่งไม่สำเร็จ) เนื่องมาจากหลายสาเหตุ ดังต่อไปนี้</b></p>
+                                            <p style="margin-bottom: 5px;">• Insufficient address (ที่อยู่ไม่ถูกต้อง): พัสดุที่มีที่อยู่ไม่ชัดเจน หากเป็นร้านที่มี การเก็บเงินปลายทาง ควรจะจัดการแก้ปัญหาโดย</p>
+                                            <p style="margin-bottom: 5px;">• Delivery Reschedule (ผู้รับเลื่อนวันรับสินค้า): ผู้รับเลื่อนวันรับสินค้าไปก่อน เมื่อมีผู้รับสินค้าหรือมีการปฏิเสธจะดำเนินการไปยังสถานะถัดไป</p>
+                                            <p style="margin-bottom: 25px;">• Delivery Refused (ผู้รับปฏิเสธการรับสินค้า): สินค้าจะถูกตีกลับ (return) ในขั้นถัดไป</p>
+
+                                            <p style="margin-bottom: 25px; color: #08a7a3;"><b>Complete (สำเร็จ) สถานะที่บอกว่า การจัดส่งสำเร็จแล้ว</b></p>
+
+                                            <p style="margin-bottom: 5px;"><b>Delivered (ส่งแล้ว)</b></p>
+                                            <p style="margin-bottom: 25px;">จัดส่งสำเร็จแล้ว</p>
+
+                                            <p style="margin-bottom: 5px;"><b>COD Remitted (ได้รับเงินแล้ว)</b></p>
+                                            <p style="margin-bottom: 25px;">ยอดเก็บเงินโอนเข้าบัญชีร้านค้าแล้ว</p>
+
+                                            <p style="margin-bottom: 5px;"><b>Return (ถูกตีกลับ)</b></p>
+                                            <p style="margin-bottom: 25px;">สินค้าโดนตีกลับเนื่องจาก ผู้รับปฏิเสธการรับสินค้า หรือ จัดส่งไม่สามารถติดต่อผู้รับ ได้เนื่องจากที่อยู่ผิดหรือเบอร์โทรติดต่อไปยังผู้รับผิด</p>
+
+                                        </v-card-text>
+
+                                        <v-card-actions class="flex justify-center" style="border-top   : 1px solid rgba(0, 0, 0, .1);">
+                                            <v-btn outlined
+                                                style="width: 90px; height: 38px ; padding-top: 15px; font-size: 15px; background-color: #2bb43e; color: white;">
+                                                <p>ปิด</p>
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+
+                                <v-menu>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; background-color: #aac27f; color: white; border-radius: 5px;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>เลือกออเดอร์</p>
+                                        </v-btn>
+                                    </template>
+
+                                    <v-list>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    จากไฟล์ Excel
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif; color: #6aaee2; text-decoration: underline;">
+                                                    ตัวอย่างไฟล์ Excel
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+
+                                <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; background-color: red; color: white; border-radius: 5px;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>ที่ต้องพิมใหม่ (1)</p>
+                                        </v-btn>
+                            </div>
+                            </div>
+                            <div class="d-flex col-md-3 col-sm12 justify-end" style="padding: 5px;">
+                                <v-menu offset-y>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn elevation="2" outlined
+                                            style="margin-bottom: 8px; padding: 10px 15px; font-size: 18px; padding-top: 25px; margin-right: 10px; border-color: #424143 !important;"
+                                            v-bind="attrs" v-on="on">
+                                            <p>ดาวโหลดไฟล์<i class="fa fa-angle-down" style="font-size: 25px; "
+                                                    saria-hidden="true"></i></p>
+                                        </v-btn>
+                                    </template>
+
+                                    <v-list>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    ทั้งหมด (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    เก็บเงินปลายทาง (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    รอโอนเงิน (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    โอนเงินแล้ว (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                        <v-list-item style="padding: 0 0;">
+                                            <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
+                                                v-bind="attrs" v-on="on" style="height: 48px; width: 100%;">
+                                                <p style="font-size: 18px; font-family: 'Sarabun', sans-serif;">
+                                                    เคลม (0)
+                                                </p>
+                                            </v-btn>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+                            </div>
+                        </div>
+                    </v-card>
+                </div>
+
+            </div>
+
         </v-app>
     </div>
 
@@ -423,15 +1260,95 @@
             el: "#app",
             vuetify: new Vuetify(),
             data: () => ({
+                tab: null,
                 lazy: false,
-                isActive: true,
-                isActive2: false,
+                search: '',
+                dialog: false,
+                dialogDelete: false,
+                is_Overview_Active: false,
+                is_Manage_Product_Active: false,
+                is_Orders_Active: true,
+
+                page: 1,
+                pageCount: 0,
+                select: { itemsPerPage: 10, },
+                items: [
+                    { itemsPerPage: 10, },
+                    { itemsPerPage: 25, },
+                    { itemsPerPage: 50, },
+                    { itemsPerPage: 100, },
+                ],
+                singleSelect: false,
+                selected: [],
+                headers: [
+                    {
+                        text: 'รูป',
+                        align: 'start',
+                        sortable: false,
+                        filterable: false,
+                        value: 'photo',
+                    },
+                    { text: 'ชื่อ', value: 'name' },
+                    { text: 'รหัส SKU', value: 'code' },
+                    { text: 'ราคา/บาท', value: 'price' },
+                    { text: 'น้ำหนัก', value: 'weight', filterable: false, },
+                    { text: 'Tag', value: 'tag' },
+                    { text: 'จำนวน', value: 'amount', filterable: false, },
+                    { text: 'จอง', value: 'booking', filterable: false, },
+                ],
+                item: [
+                    {
+                        photo: 'eiei',
+                        name: 'หห',
+                        code: '#24383419308',
+                        price: 200,
+                        weight: 10,
+                        tag: 'Test',
+                        amount: 1,
+                        booking: 1,
+                    },
+                ],
+                tag_items: [],
+                price_items: ["เปลี่ยนได้", "เปลี่ยนไม่ได้"],
+                editedIndex: -1,
+                editedItem: {
+                    photo: '',
+                    name: '',
+                    code: '',
+                    price: 0,
+                    weight: 0,
+                    tag: '',
+                    amount: 0,
+                    booking: 0,
+                },
+                defaultItem: {
+                    photo: '',
+                    name: '',
+                    code: '',
+                    price: 0,
+                    weight: 0,
+                    tag: '',
+                    amount: 0,
+                    booking: 0,
+                },
+
             }),
             methods: {
-                test() {
-                    this.isActive = false;
-                    this.isActive2 = true;
-                }
+                to_Overview() {
+                    this.is_Overview_Active = true;
+                    this.is_Manage_Product_Active = false;
+                    this.is_Orders_Active = false;
+                },
+                to_ManageProduct() {
+                    this.is_Overview_Active = false;
+                    this.is_Manage_Product_Active = true;
+                    this.is_Orders_Active = false;
+                },
+                to_Orders() {
+                    this.is_Overview_Active = false;
+                    this.is_Manage_Product_Active = false;
+                    this.is_Orders_Active = true;
+                },
             },
         });
     </script>
