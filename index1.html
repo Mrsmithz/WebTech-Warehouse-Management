@@ -24,6 +24,7 @@
     }
     * {
         font-family: 'Kanit', sans-serif;
+        /* margin: 0; */
     }
     body {
         font-family: 'Kanit', sans-serif;
@@ -54,7 +55,6 @@
     h3 {
         font-size: calc(var(--h3-fz-m) / 10 * 1rem);
         line-height: calc(var(--h3-height-m) / var(--h3-fz-m));
-        margin: 0 0 8px;
         letter-spacing: 0.02em;
         float: left;
         width: 100%;
@@ -148,7 +148,7 @@
         transition: background .3s,border .3s,border-radius .3s,box-shadow .3s,-webkit-border-radius .3s,-webkit-box-shadow .3s;
         text-align: center;
         hyphens: manual;
-        margin: 20px 0 0;
+        /* margin: 20px 0 0; */
         float: left;
         width: 100%;
         padding: 0 12px;
@@ -380,7 +380,19 @@
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
-
+/* .footer {
+    width: 100%;
+    padding: 24px 32px 24px;
+    margin-top: 44px;
+    color: #fff;
+    float: left;
+    font-size: 18px;
+    line-height: 0.90909091;
+    background: rgb(79,144,87);
+    background: -moz-linear-gradient(top, rgba(79,144,87,1) 0%, rgba(24,119,64,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(79,144,87,1) 0%,rgba(24,119,64,1) 100%);
+    background: linear-gradient(to bottom, rgba(79,144,87,1) 0%,rgba(24,119,64,1) 100%);
+} */
         #background-video { width: 640px; height: 360px; position: relative; }
         #background-video iframe { width: 100%; height: 100%; display: none; }
         #background-video .play-btn { position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; font-size: 0px; line-height: 0px; background: url(http://www.legacycitychurch.com/media/cover_art/Play%20Button%20Overlay/playbutton.png) center center no-repeat; background-size: 120px auto; }
@@ -419,20 +431,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">ติดต่อเรา</a>
                     </li>
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </li> -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link disabled" href="#">Disabled</a>
-                    </li> -->
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
                     <a href="login.html" class="text-dark mr-4">เข้าสู่ระบบ</a>
@@ -675,26 +673,31 @@
             <a href="loginn.html" class="btn btn_green" style="margin-top: 2%; width: 200px;">สมัครใช้งาน</a>
         </div>
     </div>
-    <hr class="hr" style="margin-bottom: 3%;"><br><br>
+    <hr class="hr"><br><br>
     <div class="footer">
-        <div class="page9">
             <div class="row">
                 <div class="col-md-6" style="text-align: left;">
                     <h2>Fillgoods Company</h2>
-                    <p>21 ซอย นราธิวาสราชนครินทร์ 8 แขวง ทุ่งวัดดอน เขต สาทร กรุงเทพมหานคร 10120, ประเทศไทย
-                        โทรศัพท์: 063 535 7404</p>
+                    <p>สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+                        ถนนฉลองกรุง เขตลาดกระบัง กรุงเทพ 10520</p>
+                    <p>โทร: 02-329-8000 ต่อ 3203, 3205</p>
+                    <li>นายชวิน       โล่ห์รัตนเสน่ห์  รหัสนักศึกษา 62070045 </li>
+                    <li>นายณัฐวัฒน์    สามสี    รหัสนักศึกษา 62070067</li>
+                    <li>นายเดชพนต์   นุ่นเสนต์  รหัสนักศึกษา 62070070</li>
+                    <li>นางสาวริณี  เปรมานนท์  รหัสนักศึกษา 62070159</li>
+                    <li>นายศิวกร  สมคะเณย์  รหัสนักศึกษา 62070179</li>
                 </div>
                 <div class="col-md-6">
-                <div class="row" style="text-align: right;">
-                <div class="col-md-6" style="text-align: center;">
+                    <div class="row" style="text-align: right;">
+                    <div class="col-md-12" style="text-align: right;">
                     <h2>You can get Fillgoods app at below store</h2>
-                    <img alt="" data-src="img/icon-appstore.png" class=" ls-is-cached lazyloaded" src="img/icon-appstore.png">
-                        <img alt="" data-src="img/icon-ggPlay.png" class=" ls-is-cached lazyloaded" src="img/icon-ggPlay.png">
+                    <a href="https://apps.apple.com/th/app/fillgoods/id1411153052"><img alt="" data-src="img/icon-appstore.png" class=" ls-is-cached lazyloaded" src="img/icon-appstore.png" style="margin: 10px; padding: 5px;"></a>
+                    <a href="https://play.google.com/store/apps/details?id=paiduay.android.fillgoods"><img alt="" data-src="img/icon-ggPlay.png" class=" ls-is-cached lazyloaded" src="img/icon-ggPlay.png"></a>
                     </div>
                 </div>
-                </div>
-            </div>
-            </div>
+            </div>           
+         </div>
+         <hr class="hr">    
             
 
 
