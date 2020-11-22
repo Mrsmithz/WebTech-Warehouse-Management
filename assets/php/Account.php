@@ -193,11 +193,35 @@
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("i", $this->id);
             if ($stmt->execute()){
-                $stmt->close();
-                return true;
+                $result = $stmt->get_result();
+                return $result;
             }
             else{
                 $stmt->close();
+                return false;
+            }
+        }
+        function getCustomer(){
+            $sql = "select * from customer where user_id=(?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $this->id);
+            if ($stmt->execute()){
+                $result = $stmt->get_result();
+                return $result;
+            }
+            else{
+                $stmt->close();
+                return false;
+            }
+        }
+        function addCustomer($customer){
+            $sql = "insert into customer(user_id, order_number, track_number, contact, telephone_opt, telephone, name, price, method, address, subdistrict, district, province, postcode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("issssssdssssss", $this->id, $customer->order_number, $customer->track_number, $customer->contact, $customer->telephone_opt, $customer->telephone, $customer->name, $customer->price, $customer->method, $customer->address, $customer->subdistrict, $customer->district, $customer->province, $customer->postcode);
+            if ($stmt->execute()){
+                return true;
+            }
+            else{
                 return false;
             }
         }

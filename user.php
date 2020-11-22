@@ -1,7 +1,153 @@
+<?php
+session_start();
+$sessionlifetime = 20;
+if(isset($_SESSION["timeLasetdActive"])){
+	$seclogin = (time()-$_SESSION["timeLasetdActive"])/60;
+	if($seclogin>$sessionlifetime){
+		session_destroy();
+	}else{
+		$_SESSION["timeLasetdActive"] = time();
+	}
+}else{
+	$_SESSION["timeLasetdActive"] = time();
+}
+if (!isset($_SESSION['firstname'])){
+    echo '<script type="text/javascript">',
+        'window.location.href = "login.php"',
+            '</script>';
+     exit;
+}
+include "assets/php/Account.php";
+$acct = new Account();
+$acct->id = $_SESSION['id'];
+$acct->firstname = $_SESSION['firstname'];
+$acct->lastname = $_SESSION['lastname'];
+$acct->username = $_SESSION['username'];
+$acct->password = $_SESSION['password'];
+$acct->email = $_SESSION['email'];
+$acct->tel = $_SESSION['telephone'];
+function getItem(){
+    $acct = $GLOBALS['acct'];
+    $result = $acct->getAllItem();
+    if ($result){
+        $item = array();
+        while ($row = $result->fetch_assoc()){
+            $temp = array("id"=>$row['item_id'], "name"=>$row['item_name'], "type"=>$row['item_type'], "price"=>$row['item_price'], "weight"=>$row['item_weight'], "quantities"=>$row['quantity']);
+            array_push($item, $temp);
+        }
+        echo json_encode($item);
+    }
+}
+function getCustomer(){
+    $acct = $GLOBALS['acct'];
+    $result = $acct->getCustomer();
+    if ($result){
+        $customer = array();
+        while ($row = $result->fetch_assoc()){
+            $temp = array('customer_name'=>$row['name'], 'customer_phone'=>$row['telephone'], 'customer_address'=>$row['address'], 'customer_district'=>$row['district'], 'customer_sub_district'=>$row['subdistrict'], 'customer_province'=>$row['province'], 'customer_postcode'=>$row['postcode']);
+            array_push($customer, $temp);
+        }
+        echo json_encode($customer);
+    }
+}
+function getOrder(){
+    $acct = $GLOBALS['acct'];
+    $result = $acct->getCustomer();
+    if ($result){
+        $order = array();
+        while ($row = $result->fetch_assoc()){
+            $temp = array('order_number'=>$row['order_number'], 'track_number'=>$row['track_number'], 'phone_number'=>$row['telephone'], 'customer_name'=>$row['name'], 'price'=>$row['price'], 'payment'=>$row['method'], 'create_date'=>$row['date']);
+            array_push($order, $temp);
+        }
+        echo json_encode($order);
+    }
+}
+function getQuantity(){
+    $acct = $GLOBALS['acct'];
+    $result = $acct->getAllItem();
+    if ($result){
+        $item = array();
+        $count = 1;
+        while ($row = $result->fetch_assoc()){
+            if ($count >= 15){
+                break;
+            }
+            $temp =  array('name'=>$row['item_name'], 'quantities'=>$row['quantity']);
+            array_push($item, $temp);
+            $count++;
+        }
+        shuffle($item);
+        echo json_encode($item);
+    }
+}
+function getItemType(){
+    $acct = $GLOBALS['acct'];
+    $result = $acct->getAllItem();
+    if ($result){
+        $first = true;
+        $item = array();
+        $count = 1;
+        while ($row = $result->fetch_assoc()){
+            $value = $row['item_type'];
+            if ($count >= 15){
+                break;
+            }
+            $count++;
+            if (!$item){
+                $temp = array('quantities'=>1, 'type'=>$value);
+                array_push($item, $temp);
+            }
+            for ($i = 0;$i<sizeof($item);$i++){
+                if (!strcmp($value, $item[$i]['type'])){
+                    $item[$i]['quantities'] = $item[$i]['quantities']+1;
+                    continue 2;
+                }
+            }
+            $temp = array('quantities'=>1, 'type'=>$value);
+            array_push($item, $temp);
+        }
+        echo json_encode($item);
+    }
+}
+function getPrice(){
+    $acct = $GLOBALS['acct'];
+    $result = $acct->getAllItem();
+    if($result){
+        $item = array();
+        $count = 1;
+        while ($row = $result->fetch_assoc()){
+            if ($count >= 15){
+                break;
+            }
+            $count++;
+            $temp = array('name'=>$row['item_name'], 'price'=>$row['item_price']);
+            array_push($item, $temp);
+        }
+        echo json_encode($item);
+    }
+}
+function getWeight(){
+    $acct = $GLOBALS['acct'];
+    $result = $acct->getAllItem();
+    if($result){
+        $item = array();
+        while ($row = $result->fetch_assoc()){
+            if ($count >= 15){
+                break;
+            }
+            $count++;
+            $temp = array('name'=>$row['item_name'], 'weight'=>$row['item_weight']);
+            array_push($item, $temp);
+        }
+        echo json_encode($item);
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
@@ -157,6 +303,11 @@
             background-color: #1d8649 !important;
         }
 
+        .table-border td{
+            border-bottom: 1px solid rgba(0, 0, 0, .1) !important;
+            border-right: 1px solid rgba(0, 0, 0, .1) !important;
+        }
+
         .black-table .v-data-table-header {
             background-color: #424242 !important;
             border-radius: 5px !important;
@@ -192,6 +343,10 @@
             -webkit-filter: grayscale(0);
             filter: grayscale(0);
             border-radius: 10px;
+        }
+
+        .row-pointer {
+            cursor: pointer;
         }
 
         @media screen and (max-width: 600px) {}
@@ -280,7 +435,7 @@
                     </v-menu>
                 </div>
                 <div class="v-toolbar__items hidden-sm-and-down">
-                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button">
+                    <v-btn @click="to_Customer()" class="v-btn--flat v-btn--text theme--light bars-button">
                         <p>รายชื่อลูกค้า</p>
                     </v-btn>
                 </div>
@@ -296,7 +451,7 @@
                         </template>
                         <v-list>
                             <v-list-item :key="index" style="padding: 0 0;">
-                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
+                                <v-btn class="v-btn--flat v-btn--text theme--light bars-button" @click="to_Deep_Overview()" v-bind="attrs" v-on="on"
                                     style="height: 48px; width: 100%;">
                                     <p style="font-size: 18px;">
                                         ภาพรวมอย่างละเอียด
@@ -343,8 +498,8 @@
                                 <p style="padding-right: 8px">
                                 <div class="v-avatar" style="height: 25px; width: 25px; margin-right: 5px;">
                                     <img src="img/shop.png">
-                                </div> NAME HERE <i class="fa fa-caret-down" aria-hidden="true"
-                                    style="margin-left: 5px;"></i>
+                                </div> <?php echo $_SESSION['firstname']." ".$_SESSION['lastname'];?> <i
+                                    class="fa fa-caret-down" aria-hidden="true" style="margin-left: 5px;"></i>
                                 </p>
                             </v-btn>
                         </template>
@@ -383,9 +538,9 @@
                         <v-list>
                             <v-list-item :key="index" style="padding: 0 0;">
                                 <v-btn class="v-btn--flat v-btn--text theme--light bars-button" v-bind="attrs" v-on="on"
-                                    style="height: 48px; width: 100%;">
+                                    style="height: 48px; width: 100%;" @click="logout">
                                     <p style="font-size: 18px; color: #08a7a3;">
-                                        ออกจากระบบ  
+                                        ออกจากระบบ
                                     </p>
                                 </v-btn>
                             </v-list-item>
@@ -496,7 +651,7 @@
                     </v-card>
 
                     <div style="width: 100%;">
-                        <v-btn class="button-right" style="overflow: hidden; float: right;">
+                        <v-btn class="button-right" style="overflow: hidden; float: right; " @click="to_Deep_Overview()">
                             <p>ภาพรวมอย่างละเอียด</p>
                         </v-btn>
                     </div>
@@ -516,8 +671,7 @@
                                 <v-tabs-slider color="#1d8649"></v-tabs-slider>
                                 <v-tab class="tabs" style="font-size: 18px; letter-spacing: -0.5px; ">รายการสินค้า
                                 </v-tab>
-                                <v-tab class="tabs" style="font-size: 18px; width: 140px; letter-spacing: -0.5px;">
-                                    ประวัติ</v-tab>
+
                             </v-tabs>
                         </div>
                         <v-tabs-items v-model="tab" class="tabs-item" style="width: 100%;">
@@ -525,78 +679,15 @@
                                 <div class="row" style="padding-left: 13px;">
                                     <div class="col-sm-12 col-md-5" style="padding-top: 0;">
                                         <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
-                                            placeholder="ชื่อสินค้า รหัสสินค้า ราคา Tag" single-line hide-details
-                                            outlined dense color="none"
-                                            style="padding-top: 0; margin-top: 0; width: 100%;"></v-text-field>
+                                            placeholder="ชื่อสินค้า ชนิด" single-line hide-details outlined dense
+                                            color="none" style="padding-top: 0; margin-top: 0; width: 100%;">
+                                        </v-text-field>
                                     </div>
                                     <div class="col-sm-12 col-md-7 d-flex justify-end" style="padding-top: 0;">
 
 
-                                        <v-menu offset-y>
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <v-btn elevation="2" outlined v-bind="attrs" v-on="on"
-                                                    style="padding: 8px 8px; height: 40px; margin-right: 20px;">
-                                                    <img src="img/excel.svg" style="width: 25px; height: 25px;">
-                                                </v-btn>
 
-                                            </template>
 
-                                            <v-list class="border-green">
-                                                <v-list-item :key="index" style="padding: 0 0;">
-                                                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
-                                                        v-bind="attrs" v-on="on" style="height: 48px;">
-                                                        <p style="font-size: 18px;">
-                                                            ส่งออกสินค้า
-                                                        </p>
-                                                    </v-btn>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-menu>
-
-                                        <!--<v-menu offset-y>
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <v-btn elevation="2" outlined
-                                                    style="padding: 8px 8px; font-size: 18px; padding-top: 25px; height: 40px; width: 130px; margin-right: 20px;"
-                                                    v-bind="attrs" v-on="on">
-                                                    <p>ตัวกรอง <i class="fa fa-filter"
-                                                            style="font-size: 23px; margin-left: 10px;"
-                                                            saria-hidden="true"></i></p>
-                                                </v-btn>
-                                            </template>
-
-                                            <v-list class="border-green">
-                                                <v-list-item :key="index" style="padding: 0 0;">
-                                                    <div class="row wrap" style="width: 350px;">
-                                                        <div class="d-flex col-xs-6 px-4">
-                                                            <v-checkbox v-model="checkbox" :label="`สินค้าย่อย`"
-                                                                style="font-size: 20px;" color="#1d8649">
-                                                            </v-checkbox>
-                                                        </div>
-                                                        <v-checkbox v-model="checkbox" :label="`สินค้าหลัก`"
-                                                            style="font-size: 20px;" color="#1d8649">
-                                                        </v-checkbox>
-                                                    </div>
-                                                </v-list-item>
-
-                                                <v-list-item :key="index" style="padding: 0 0;">
-                                                    <v-checkbox v-model="checkbox" :label="`มีสินค้า`"
-                                                        style="font-size: 20px;" color="#1d8649">
-                                                    </v-checkbox>
-                                                    <v-checkbox v-model="checkbox" :label="`ไม่มีสินค้า`"
-                                                        style="font-size: 20px;" color="#1d8649">
-                                                    </v-checkbox>
-                                                </v-list-item>
-
-                                                <v-list-item :key="index" style="padding: 0 0;">
-                                                    <v-checkbox v-model="checkbox" :label="`นับสินค้า`"
-                                                        style="font-size: 20px;" color="#1d8649">
-                                                    </v-checkbox>
-                                                    <v-checkbox v-model="checkbox" :label="`ไม่นับสินค้า`"
-                                                        style="font-size: 20px;" color="#1d8649">
-                                                    </v-checkbox>
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-menu>-->
 
                                         <v-dialog v-model="dialog" max-width="98vw" max-height="95vh">
                                             <template v-slot:activator="{ on, attrs }">
@@ -619,15 +710,6 @@
                                                         <div class="col-md-10 col-sm-9"
                                                             style="padding: 10px 0px 0px 14vw;">
 
-                                                            <div class="row" style="padding-top: 15px;">
-                                                                <p
-                                                                    style="font-size: 15px; width: 100%; margin-bottom: 10px; padding-left: 20px; color: #666;">
-                                                                    รูปสินค้า</p>
-                                                                <button
-                                                                    style="width: 220px; height: 210px; border-style: dotted; border-color: #dadce0; color: #666666;"><i
-                                                                        class="fa fa-plus" style="font-size: 80px;"
-                                                                        saria-hidden="true"></i><br>เพิ่มรูปสินค้า</button>
-                                                            </div>
 
                                                             <div class="row" style="padding-top: 30px;">
                                                                 <div class="col-md-8 col-sm-9 col-xs-12"
@@ -637,7 +719,8 @@
                                                                         ชื่อสินค้า</p>
                                                                     <v-text-field placeholder="ชื่อสินค้า" single-line
                                                                         hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                        v-model="item_name">
                                                                     </v-text-field>
                                                                 </div>
                                                             </div>
@@ -650,7 +733,8 @@
                                                                         ชนิดของสินค้า</p>
                                                                     <v-text-field placeholder="ชนิดของสินค้า"
                                                                         single-line hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                        v-model="item_type">
                                                                     </v-text-field>
                                                                 </div>
                                                             </div>
@@ -661,10 +745,10 @@
                                                                     <p
                                                                         style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
                                                                         ราคา</p>
-                                                                    <v-text-field type="number" value="0.00"
-                                                                        placeholder="0.00" single-line hide-details
-                                                                        outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    <v-text-field type="number" placeholder="0.00"
+                                                                        single-line hide-details outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                        v-model="item_price">
                                                                     </v-text-field>
                                                                 </div>
                                                                 <div class="col-md-3 col-sm-5 col-xs-12"
@@ -672,18 +756,13 @@
                                                                     <p
                                                                         style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
                                                                         จำนวน</p>
-                                                                    <v-text-field type="number" value="0"
-                                                                        placeholder="0" single-line hide-details
-                                                                        outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                    <v-text-field type="number" placeholder="0"
+                                                                        single-line hide-details outlined color="none"
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                        v-model="item_quantities">
                                                                     </v-text-field>
                                                                 </div>
-                                                                <div class="col-md-2 col-sm-3 col-xs-5 d-flex align-center"
-                                                                    style="padding: 0; padding-top: 25px; padding-left: 5px;">
-                                                                    <v-checkbox v-model="checkbox" :label="`นับสต๊อก`"
-                                                                        style="font-size: 20px;" color="#1d8649">
-                                                                    </v-checkbox>
-                                                                </div>
+
                                                             </div>
 
                                                             <div class="row" style="padding-top: 20px;">
@@ -694,7 +773,8 @@
                                                                         น้ำหนัก</p>
                                                                     <v-text-field type="number" placeholder="0.00"
                                                                         single-line hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                        v-model="gram_weight" @keyup="convertWeight">
                                                                     </v-text-field>
                                                                     <p
                                                                         style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
@@ -710,146 +790,27 @@
                                                                         น้ำหนัก</p>
                                                                     <v-text-field type="number" placeholder="0.00"
                                                                         single-line hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                        v-model="item_weight" disabled>
                                                                     </v-text-field>
                                                                     <p
                                                                         style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
                                                                         กิโลกรัม</p>
                                                                 </div>
                                                             </div>
-
-                                                            <!--<div class="row" style="padding-top: 0px;">
-                                                                <div class="col-md-8 col-sm-9 col-xs-12"
-                                                                    style="padding: 0;">
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        Tag</p>
-                                                                    <v-select :items="tag_items" placeholder="Tag"
-                                                                        outlined style="background-color: #fafafa; font-size: 18px;"></v-select>
-                                                                </div>
-                                                            </div>-->
                                                         </div>
-
-                                                        <!--<div class="row flex justify-center"
-                                                            style="margin-bottom: 10px;">
-
-                                                            <v-btn class="v-btn--flat v-btn--text theme--light"
-                                                                style="box-shadow: none; font-size: 15px ; padding-top: 15px; color: #1d8649;">
-                                                                <p>STOCK ADVANCE <i class="fa fa-caret-down"
-                                                                        aria-hidden="true"></i></p>
-                                                            </v-btn>
-
-                                                            <v-btn class="v-btn--flat v-btn--text theme--light"
-                                                                style="box-shadow: none; font-size: 15px ; padding-top: 15px; color: #1d8649; display: none;">
-                                                                <p>STOCK ADVANCE <i class="fa fa-caret-up"
-                                                                        aria-hidden="true"></i></p>
-                                                            </v-btn>
-                                                        </div>-->
-
-                                                        <!--<div class="row"
-                                                            style="border-top: 1.5px solid rgba(0, 0, 0, .1); width: 100%; padding-top: 10px;">
-
-                                                            <div class="col-md-2 col-sm-3">
-                                                                <p style="font-size: 18px;">รายละเอียดขั้นสูง</p>
-                                                            </div>
-                                                            <div class="col-md-10 col-sm-9"
-                                                                style="padding: 0px 0px 0px 14vw; ">
-
-                                                                <div class="row" style="padding-top: 0px;">
-                                                                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 0px; padding-bottom: 0px;">
-                                                                        <v-checkbox v-model="checkbox" :label="`AUTO-SKU`"
-                                                                        style="padding-top: 0px;"  color="#1d8649">
-                                                                    </v-checkbox>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row" style="padding-top: 0px;">
-                                                                    <div class="col-md-8 col-sm-9 col-xs-12"
-                                                                        style="padding: 0;">
-                                                                        <p
-                                                                            style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                            SKU</p>
-                                                                        <v-text-field placeholder="#24383422100" single-line
-                                                                            hide-details outlined color="none"
-                                                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                        </v-text-field>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row" style="padding-top: 0px;">
-                                                                    <div class="col-md-1 col-sm-1 col-xs-3 d-flex align-center justify-center" style="padding: 0;">
-                                                                        <v-tooltip top style="padding: 0; ">
-                                                                            <template v-slot:activator="{ on, attrs }">
-                                                                                <svg style="width:32px;height:32px; color: #1d8649;" viewBox="0 0 24 24" v-bind="attrs"
-                                                                                v-on="on">
-                                                                                    <path fill="currentColor" d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
-                                                                                </svg>
-                                                                            </template>
-                                                                            <span style="font-family: 'Kanit', sans-serif; font-size: 13px;">ประเภทราคา <br>
-                                                                                ผู้ใช้สามารถตั้งค่าราคาสินค้าได้ ดังนี้ <br>
-                                                                                เปลี่ยนได้ คือ สามารถแก้ไขราคาสินค้าตอนสร้างออเดอร์ได้ <br>
-                                                                                เปลี่ยนไม่ได้ คือ ไม่สามารถแก้ไขราคาสินค้าตอนสร้างออเดอร์ได้
-                                                                            </span>
-                                                                          </v-tooltip>
-
-                                                                    </div>
-                                                                    <div class="col-md-7 col-sm-8 col-xs-9" style="padding-left: 0;">
-                                                                        <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        ประเภทราคา</p>
-                                                                    <v-select :items="price_items" placeholder="เลือกประเภทราคา"
-                                                                        outlined style="background-color: #fafafa; font-size: 18px;"></v-select>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row" style="padding-top: 0px;">
-                                                                    <div class="col-md-3 col-sm-5 col-xs-12"
-                                                                        style="padding: 0; padding-right: 25px;">
-                                                                        <p
-                                                                            style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                            ต้นทุน</p>
-                                                                        <v-text-field type="number" placeholder="0.00"
-                                                                            single-line hide-details outlined color="none"
-                                                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                        </v-text-field>
-
-                                                                    </div>
-                                                                    <div class="col-md-3 col-sm-5 col-xs-12"
-                                                                        style="padding: 0; position: relative;">
-                                                                        <p
-                                                                            style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                            เวลาที่ใช้สั่งสินค้า</p>
-                                                                        <v-text-field type="number" placeholder="0"
-                                                                            single-line hide-details outlined color="none"
-                                                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                        </v-text-field>
-                                                                        <p
-                                                                            style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; margin-bottom: 0px; text-align: right;">
-                                                                            วัน</p>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="row" style="padding-top: 0px;">
-                                                                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding-top: 0px; padding-bottom: 0px;">
-                                                                        <v-checkbox v-model="checkbox" :label="`VAT`"
-                                                                        style="padding-top: 0px;"  color="#1d8649">
-                                                                    </v-checkbox>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>>-->
-
                                                     </div>
                                                 </v-card-text>
 
                                                 <v-card-actions class="flex justify-center">
                                                     <v-btn outlined
-                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px;">
+                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px;"
+                                                        @click="close">
                                                         <p>ยกเลิก</p>
                                                     </v-btn>
                                                     <v-btn outlined
-                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px; background-color: #1d8649; color: white;">
+                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px; background-color: #1d8649; color: white;"
+                                                        @click="addItemToSQL">
                                                         <p>บันทึก</p>
                                                     </v-btn>
                                                 </v-card-actions>
@@ -867,14 +828,7 @@
                                             </template>
 
                                             <v-list class="border-green">
-                                                <v-list-item :key="index" style="padding: 0 0;">
-                                                    <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
-                                                        v-bind="attrs" v-on="on" style="height: 48px;">
-                                                        <p style="font-size: 18px;">
-                                                            Merge
-                                                        </p>
-                                                    </v-btn>
-                                                </v-list-item>
+
                                                 <v-list-item :key="index" style="padding: 0 0;">
                                                     <v-btn class="v-btn--flat v-btn--text theme--light bars-button"
                                                         v-bind="attrs" v-on="on" style="height: 48px;">
@@ -938,7 +892,7 @@
                                     background-color: #1d8649 !important;
                                     color: white !important;
                                     border-radius: 6px !important;
-                                    height: 65px; margin-right: 10px;">
+                                    height: 65px; margin-right: 10px;" @click="to_Create_Orders()">
                                     <i class="fa fa-plus-circle"
                                         style="margin-top: -15px; font-size: 22px; margin-right: 5px;"
                                         aria-hidden="true"></i>
@@ -1134,7 +1088,7 @@
                                         </v-list>
                                     </v-menu>
 
-                                    <v-dialog v-model="dialog" max-width="500px" max-height="95vh">
+                                    <v-dialog v-model="description" max-width="500px" max-height="95vh">
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-btn icon v-bind="attrs" v-on="on"
                                                 style="margin-bottom: 8px; margin-right: 10px;">
@@ -1220,7 +1174,8 @@
                                             <v-card-actions class="flex justify-center"
                                                 style="border-top   : 1px solid rgba(0, 0, 0, .1);">
                                                 <v-btn outlined
-                                                    style="width: 90px; height: 38px ; padding-top: 15px; font-size: 15px; background-color: #2bb43e; color: white;">
+                                                    style="width: 90px; height: 38px ; padding-top: 15px; font-size: 15px; background-color: #2bb43e; color: white;"
+                                                    @click="close">
                                                     <p>ปิด</p>
                                                 </v-btn>
                                             </v-card-actions>
@@ -1664,14 +1619,16 @@
                                 <b>ชื่อลูกค้า</b></p>
                             <v-text-field class="border-grey" :rules="customer_name_rules" counter="50" single-line
                                 outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_name">
                             </v-text-field>
                         </div>
                         <div class="col-md-6 col-xs-12" style="padding-bottom: 0;">
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>Facebook / LINE / อีเมล</b></p>
                             <v-text-field class="border-grey" counter="200" single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_contact">
                             </v-text-field>
                         </div>
                     </div>
@@ -1681,20 +1638,23 @@
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>ที่อยู่</b></p>
                             <v-textarea class="border-grey" counter="80" single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_address">
                             </v-textarea>
                         </div>
                         <div class="col-md-6 col-xs-12" style="padding-top: 0;">
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>เบอร์โทรศัพท์</b></p>
                             <v-text-field class="border-grey" single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_tel">
                             </v-text-field>
 
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>เบอร์โทรศัพท์สำรอง (ปล่อยว่างได้) </b></p>
                             <v-text-field class="border-grey" hide-details single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_tel_opt">
                             </v-text-field>
                         </div>
                     </div>
@@ -1705,7 +1665,8 @@
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>จังหวัด</b></p>
                             <v-text-field class="border-grey" single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_province">
                             </v-text-field>
                         </div>
 
@@ -1713,7 +1674,8 @@
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>อำเภอ / เขต</b></p>
                             <v-text-field class="border-grey" single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_district">
                             </v-text-field>
                         </div>
 
@@ -1721,7 +1683,8 @@
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>ตำบล / แขวง</b></p>
                             <v-text-field class="border-grey" single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_subdistrict" @keyup="test">
                             </v-text-field>
                         </div>
 
@@ -1729,7 +1692,8 @@
                             <p style="font-size: 16px; width: 100%; margin-bottom: 5px; color: #666;">
                                 <b>รหัสไปรษณีย์</b></p>
                             <v-text-field class="border-grey" single-line outlined color="none"
-                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
+                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                v-model="customer_postcode">
                             </v-text-field>
                         </div>
 
@@ -1744,281 +1708,486 @@
                             hide-default-footer @page-count="pageCount = $event">
 
                             <template v-slot:item="{ item }" slot-scope="props">
-                                <td class="text-xs-left"
-                                    style="height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
-                                    {{ item.item_name }}</td>
-                                <td class="text-xs-left"
-                                    style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
-                                    <v-text-field v-model="item.quantity" class="border-grey" hide-details single-line
-                                        outlined dense color="none"
-                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px; ">
-                                    </v-text-field>
-                                </td>
-                                <td class="text-xs-left"
-                                    style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
-                                    <v-text-field v-model="item.price" class="border-grey" hide-details single-line
-                                        outlined dense color="none"
-                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px; ">
-                                    </v-text-field>
-                                </td>
-                                <td class="text-xs-left"
-                                    style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
-                                    <v-text-field v-model="item.discount" class="border-grey" hide-details single-line
-                                        outlined dense color="none"
-                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px; ">
-                                    </v-text-field>
-                                </td>
-                                <td class="text-xs-left"
-                                    style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
-                                    <v-text-field v-model="item.all_price" class="border-grey" hide-details single-line
-                                        outlined dense color="none"
-                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px; ">
-                                    </v-text-field>
-                                </td>
-                                <td
-                                    style="width: 80px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
-                                    <v-btn @click="deleteItem(item)" color="red darken-4" style="width: 46px;">
-                                        <svg style="width:22px;height:22px; color: white;" viewBox="0 0 24 24">
-                                            <path fill="currentColor"
-                                                d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
-                                        </svg>
-                                    </v-btn>
-                                </td>
+                                <tr>
+                                    <td class="text-xs-left"
+                                        style="height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
+                                        {{ item.item_name }}</td>
+                                    <td class="text-xs-left"
+                                        style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
+                                        <v-text-field v-model="item.quantity" class="border-grey" hide-details
+                                            single-line outlined dense color="none"
+                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px; "
+                                            @keyup="calculatePrice(item)">
+                                        </v-text-field>
+                                    </td>
+                                    <td class="text-xs-left"
+                                        style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
+                                        <v-text-field v-model="item.price" class="border-grey" hide-details single-line
+                                            outlined dense color="none"
+                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px;"
+                                            disabled>
+                                        </v-text-field>
+                                    </td>
+                                    <td class="text-xs-left"
+                                        style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
+                                        <v-text-field v-model="item.type" class="border-grey" hide-details single-line
+                                            outlined dense color="none"
+                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px;"
+                                            disabled>
+                                        </v-text-field>
+                                    </td>
+                                    <td class="text-xs-left"
+                                        style="width: 120px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
+                                        <v-text-field v-model="item.all_price" class="border-grey" hide-details
+                                            single-line outlined dense color="none"
+                                            style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 16px;"
+                                            disabled>
+                                        </v-text-field>
+                                    </td>
+                                    <td
+                                        style="width: 80px; height: 72px; border-right: 1px solid rgba(0,0,0,.18); padding: 12px 24px;">
+                                        <v-btn @click="deleteItem(item)" color="red darken-4" style="width: 46px;">
+                                            <svg style="width:22px;height:22px; color: white;" viewBox="0 0 24 24">
+                                                <path fill="currentColor"
+                                                    d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+                                            </svg>
+                                        </v-btn>
+                                    </td>
+                                </tr>
                             </template>
                         </v-data-table>
                     </v-card>
 
-                    <v-dialog v-model="dialog" max-width="600px" max-height="95vh">
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn v-bind="attrs" v-on="on" style="overflow: hidden; padding-top: 0; box-shadow: none !important;
-                                    font-size: 16px !important;
-                                    padding-top: 15px !important;
-                                    background-color: rgb(170, 194, 127) !important;
-                                    color: white !important;
-                                    border-radius: 6px !important;
-                                    margin-top: 20px;">
-                                <i class="fa fa-plus-circle"
-                                    style="margin-top: -15px; font-size: 22px; margin-right: 5px;"
-                                    aria-hidden="true"></i>
-                                <p>เพิ่มสินค้า</p>
-                            </v-btn>
-                        </template>
-                        <v-card style="font-family: 'Kanit', sans-serif; height: 90vh;
-                        overflow: scroll;
-                        overflow-x: hidden; padding: 48px;">
+                    <div class="row" style="width: 100%">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
 
-                            <v-btn icon v-bind="attrs" v-on="on" style="margin-bottom: 8px; margin-right: 10px; position: absolute; right: 0; top: 5px">
-                                <span
-                                    style="width: 22.5px; height: 22.5px;background-color: white; color: black; border-radius: 10px; padding: 0 .4rem; font-size: 15px;">X</span>
-                            </v-btn>
+                            <v-dialog v-model="addItemWindow" max-width="600px" max-height="95vh">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn v-bind="attrs" v-on="on" style="overflow: hidden; padding-top: 0; box-shadow: none !important;
+                                            font-size: 16px !important;
+                                            padding-top: 15px !important;
+                                            background-color: rgb(170, 194, 127) !important;
+                                            color: white !important;
+                                            border-radius: 6px !important;">
+                                        <i class="fa fa-plus-circle"
+                                            style="margin-top: -15px; font-size: 22px; margin-right: 5px;"
+                                            aria-hidden="true"></i>
+                                        <p>เพิ่มสินค้า</p>
+                                    </v-btn>
+                                </template>
+                                <v-card style="font-family: 'Kanit', sans-serif; height: 90vh;
+                                overflow: scroll;
+                                overflow-x: hidden; padding: 48px;">
 
-                            <v-card-text style=" color: black; font-size: 18px; text-align: center; padding: 0px;">
-                                <p style="font-size: 22px;">เลือกสินค้า</p>
-                                <div class="row" style="width: 100%;">
+                                    <v-btn icon v-bind="attrs" v-on="on"
+                                        style="margin-bottom: 8px; margin-right: 10px; position: absolute; right: 0; top: 5px"
+                                        @click="close">
+                                        <span
+                                            style="width: 22.5px; height: 22.5px;background-color: white; color: black; border-radius: 10px; padding: 0 .4rem; font-size: 15px;">X</span>
+                                    </v-btn>
 
-                                    <div class="col-md-10">
-                                        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
-                                        placeholder="search" single-line hide-details
-                                        outlined dense color="none"
-                                        style="padding-top: 0; margin-top: 0; width: 100%;">
-                                        </v-text-field>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <v-dialog v-model="dialog2" max-width="98vw" max-height="95vh">
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"
-                                                    style="font-size: 18px; height: 36px; width: 105px; background-color: rgb(170, 194, 127) !important;">
-                                                    สร้างสินค้า
-                                                </v-btn>
-                                            </template>
-                                            <v-card style="font-family: 'Kanit', sans-serif; padding: 15px;">
-                                                <v-card-title>
-                                                    <p style="font-size: 25px;">สร้างสินค้า</p>
-                                                </v-card-title>
+                                    <v-card-text style=" color: black; font-size: 18px; text-align: center; padding: 0px;">
+                                        <p style="font-size: 22px;">เลือกสินค้า</p>
+                                        <div class="row" style="width: 100%;">
 
-                                                <v-card-text class="add-item" style=" color: black;">
-                                                    <div class="row" style="border-top: 1.5px solid rgba(0, 0, 0, .1);">
-                                                        <div class="col-md-2 col-sm-3">
-                                                            <p style="font-size: 18px;">รายละเอียดสินค้า</p>
-                                                        </div>
-                                                        <div class="col-md-10 col-sm-9"
-                                                            style="padding: 10px 0px 0px 14vw;">
-
-                                                            <div class="row" style="padding-top: 15px;">
-                                                                <p
-                                                                    style="font-size: 15px; width: 100%; margin-bottom: 10px; padding-left: 20px; color: #666;">
-                                                                    รูปสินค้า</p>
-                                                                <button
-                                                                    style="width: 220px; height: 210px; border-style: dotted; border-color: #dadce0; color: #666666;"><i
-                                                                        class="fa fa-plus" style="font-size: 80px;"
-                                                                        saria-hidden="true"></i><br>เพิ่มรูปสินค้า</button>
-                                                            </div>
-
-                                                            <div class="row" style="padding-top: 30px;">
-                                                                <div class="col-md-8 col-sm-9 col-xs-12"
-                                                                    style="padding: 0;">
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        ชื่อสินค้า</p>
-                                                                    <v-text-field placeholder="ชื่อสินค้า" single-line
-                                                                        hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                    </v-text-field>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row" style="padding-top: 30px;">
-                                                                <div class="col-md-8 col-sm-9 col-xs-12"
-                                                                    style="padding: 0;">
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        ชนิดของสินค้า</p>
-                                                                    <v-text-field placeholder="ชนิดของสินค้า"
-                                                                        single-line hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                    </v-text-field>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row" style="padding-top: 20px;">
-                                                                <div class="col-md-3 col-sm-5 col-xs-12"
-                                                                    style="padding: 0; padding-right: 25px;">
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        ราคา</p>
-                                                                    <v-text-field type="number" value="0.00"
-                                                                        placeholder="0.00" single-line hide-details
-                                                                        outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                    </v-text-field>
-                                                                </div>
-                                                                <div class="col-md-3 col-sm-5 col-xs-12"
-                                                                    style="padding: 0;">
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        จำนวน</p>
-                                                                    <v-text-field type="number" value="0"
-                                                                        placeholder="0" single-line hide-details
-                                                                        outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                    </v-text-field>
-                                                                </div>
-                                                                <div class="col-md-2 col-sm-3 col-xs-5 d-flex align-center"
-                                                                    style="padding: 0; padding-top: 25px; padding-left: 5px;">
-                                                                    <v-checkbox v-model="checkbox" :label="`นับสต๊อก`"
-                                                                        style="font-size: 20px;" color="#1d8649">
-                                                                    </v-checkbox>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row" style="padding-top: 20px;">
-                                                                <div class="col-md-3 col-sm-5 col-xs-12"
-                                                                    style="padding: 0; padding-right: 25px;">
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        น้ำหนัก</p>
-                                                                    <v-text-field type="number" placeholder="0.00"
-                                                                        single-line hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                    </v-text-field>
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
-                                                                        กรัม</p>
-
-                                                                </div>
-                                                                <div class="col-md-3 col-sm-5 col-xs-12"
-                                                                    style="padding: 0; position: relative;">
-                                                                    <span
-                                                                        style="position: absolute; margin: 37.5px -18px; font-size: 26px;">=</span>
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
-                                                                        น้ำหนัก</p>
-                                                                    <v-text-field type="number" placeholder="0.00"
-                                                                        single-line hide-details outlined color="none"
-                                                                        style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;">
-                                                                    </v-text-field>
-                                                                    <p
-                                                                        style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
-                                                                        กิโลกรัม</p>
-                                                                </div>
-                                                            </div>
-
-                                                    </div>
-                                                </v-card-text>
-
-                                                <v-card-actions class="flex justify-center">
-                                                    <v-btn outlined
-                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px;">
-                                                        <p>ยกเลิก</p>
-                                                    </v-btn>
-                                                    <v-btn outlined
-                                                        style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px; background-color: #1d8649; color: white;">
-                                                        <p>บันทึก</p>
-                                                    </v-btn>
-                                                </v-card-actions>
-                                            </v-card>
-                                        </v-dialog>
-                                    </div>
-                                </div>
-                                <v-data-table  hide-default-header v-model="selected" :headers="headers" :items="item"
-                                    :single-select="singleSelect" item-key="name" :search="search" :page.sync="page"
-                                    :items-per-page="`${select.itemsPerPage}`" text-left hide-default-footer
-                                    @page-count="pageCount = $event" style="width: 100%;">
-                                    <template v-slot:item="{ item }" slot-scope="props">
-                                        <td class="text-xs-left d-flex"
-                                            style="height: 72px; border-bottom: 1px solid rgba(0,0,0,.18); padding: 12px 24px; width: 100% !important; text-align: left; font-size: 15px !important; padding-top: 0;">
-                                            <div class="row" style="padding-top: 0;">
-                                                <div class="col-xs-9 col-sm-10">
-                                                    {{ item.name }}<br>
-                                                    SKU : {{ item.code }}
-                                                </div>
-                                                <div class="col-xs-3 col-sm-2" style="text-align: right;">
-                                                    <p style="float: right;">{{ item.price }} ฿</p>
-                                                </div>
+                                            <div class="col-md-10">
+                                                <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
+                                                    placeholder="search" single-line hide-details outlined dense color="none"
+                                                    style="padding-top: 0; margin-top: 0; width: 100%;">
+                                                </v-text-field>
                                             </div>
-                                            
-                                        </td>
-                                    </template>
-                                </v-data-table>
-                                <div class="text-center pt-2">
-                                    <v-pagination color="green darken-3" style="box-shadow: none" v-model="page"
-                                        :length="pageCount"></v-pagination>
-                                    <div style="float: right; position: absolute; right: 0px; top: 240px;">
-                                        <p
-                                            style="float: right; position: absolute; right: 70px; white-space: nowrap; top: 10px; font-size: 12px;">
-                                            แสดงจำนวนต่อหน้า</p>
-                                        <v-select v-model="select" :items="items" item-text="itemsPerPage"
-                                            label="Select" return-object single-line text-left
-                                            style="width: 60px; float: left; padding-top: 0;"></v-select>
-                                    </div>
-                                </div>
-                            </v-card-text>
+                                            <div class="col-md-2">
+                                                <v-dialog v-model="dialog" max-width="98vw" max-height="95vh">
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"
+                                                            style="font-size: 18px; height: 36px; width: 105px; background-color: rgb(170, 194, 127) !important;">
+                                                            สร้างสินค้า
+                                                        </v-btn>
+                                                    </template>
+                                                    <v-card style="font-family: 'Kanit', sans-serif; padding: 15px;">
+                                                        <v-card-title>
+                                                            <p style="font-size: 25px;">สร้างสินค้า</p>
+                                                        </v-card-title>
 
-                        </v-card>
-                    </v-dialog>
+                                                        <v-card-text class="add-item" style=" color: black;">
+                                                            <div class="row" style="border-top: 1.5px solid rgba(0, 0, 0, .1);">
+                                                                <div class="col-md-2 col-sm-3">
+                                                                    <p style="font-size: 18px;">รายละเอียดสินค้า</p>
+                                                                </div>
+                                                                <div class="col-md-10 col-sm-9"
+                                                                    style="padding: 10px 0px 0px 14vw;">
+
+
+
+                                                                    <div class="row" style="padding-top: 30px;">
+                                                                        <div class="col-md-8 col-sm-9 col-xs-12"
+                                                                            style="padding: 0;">
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                                ชื่อสินค้า</p>
+                                                                            <v-text-field placeholder="ชื่อสินค้า" single-line
+                                                                                hide-details outlined color="none"
+                                                                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                                v-model="item_name">
+                                                                            </v-text-field>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row" style="padding-top: 30px;">
+                                                                        <div class="col-md-8 col-sm-9 col-xs-12"
+                                                                            style="padding: 0;">
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                                ชนิดของสินค้า</p>
+                                                                            <v-text-field placeholder="ชนิดของสินค้า"
+                                                                                single-line hide-details outlined color="none"
+                                                                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                                v-model="item_type">
+                                                                            </v-text-field>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row" style="padding-top: 20px;">
+                                                                        <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                            style="padding: 0; padding-right: 25px;">
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                                ราคา</p>
+                                                                            <v-text-field type="number" value="0.00"
+                                                                                placeholder="0.00" single-line hide-details
+                                                                                outlined color="none"
+                                                                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                                v-model="item_price">
+                                                                            </v-text-field>
+                                                                        </div>
+                                                                        <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                            style="padding: 0;">
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                                จำนวน</p>
+                                                                            <v-text-field type="number" placeholder="0"
+                                                                                single-line hide-details outlined color="none"
+                                                                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                                v-model="item_quantities">
+                                                                            </v-text-field>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    <div class="row" style="padding-top: 20px;">
+                                                                        <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                            style="padding: 0; padding-right: 25px;">
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                                น้ำหนัก</p>
+                                                                            <v-text-field type="number" placeholder="0.00"
+                                                                                single-line hide-details outlined color="none"
+                                                                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                                v-model="gram_weight" @keyup="convertWeight">
+                                                                            </v-text-field>
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
+                                                                                กรัม</p>
+
+                                                                        </div>
+                                                                        <div class="col-md-3 col-sm-5 col-xs-12"
+                                                                            style="padding: 0; position: relative;">
+                                                                            <span
+                                                                                style="position: absolute; margin: 37.5px -18px; font-size: 26px;">=</span>
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-bottom: 5px; padding-left: 20px; color: #666;">
+                                                                                น้ำหนัก</p>
+                                                                            <v-text-field type="number" placeholder="0.00"
+                                                                                single-line hide-details outlined color="none"
+                                                                                style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
+                                                                                v-model="item_weight" disabled>
+                                                                            </v-text-field>
+                                                                            <p
+                                                                                style="font-size: 15px; width: 100%; margin-top: 5px; padding-right: 20px; color: #666; text-align: right;">
+                                                                                กิโลกรัม</p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </v-card-text>
+
+                                                        <v-card-actions class="flex justify-center">
+                                                            <v-btn outlined
+                                                                style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px;"
+                                                                @click="close">
+                                                                <p>ยกเลิก</p>
+                                                            </v-btn>
+                                                            <v-btn outlined
+                                                                style="width: 200px; height: 45px ; padding-top: 15px; font-size: 18px; background-color: #1d8649; color: white;"
+                                                                @click="addItemToSQLL">
+                                                                <p>บันทึก</p>
+                                                            </v-btn>
+                                                        </v-card-actions>
+                                                    </v-card>
+                                                </v-dialog>
+                                            </div>
+                                        </div>
+                                        <v-data-table hide-default-header v-model="selected" :headers="headers" :items="item"
+                                            :single-select="singleSelect" item-key="name" :search="search" :page.sync="page"
+                                            :items-per-page="`${select.itemsPerPage}`" text-left hide-default-footer
+                                            @page-count="pageCount = $event" style="width: 100%;">
+                                            <template v-slot:item="{ item }" slot-scope="props">
+                                                <tr @click="addItem(item)">
+                                                    <td class="text-xs-left d-flex"
+                                                        style="height: 72px; border-bottom: 1px solid rgba(0,0,0,.18); padding: 12px 24px; width: 100% !important; text-align: left; font-size: 15px !important; padding-top: 0;">
+                                                        <div class="row" style="padding-top: 0;">
+                                                            <div class="col-xs-9 col-sm-10 row-pointer">
+                                                                {{ item.name }}<br>
+                                                                Type : {{ item.type }}
+                                                            </div>
+                                                            <div class="col-xs-3 col-sm-2" style="text-align: right;">
+                                                                <p style="float: right;">{{ item.price }} ฿</p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </v-data-table>
+                                        <div class="text-center pt-2">
+                                            <v-pagination color="green darken-3" style="box-shadow: none" v-model="page"
+                                                :length="pageCount"></v-pagination>
+                                            <div style="float: right; position: absolute; right: 0px; top: 240px;">
+                                                <p
+                                                    style="float: right; position: absolute; right: 70px; white-space: nowrap; top: 10px; font-size: 12px;">
+                                                    แสดงจำนวนต่อหน้า</p>
+                                                <v-select v-model="select" :items="items" item-text="itemsPerPage"
+                                                    label="Select" return-object single-line text-left
+                                                    style="width: 60px; float: left; padding-top: 0;"></v-select>
+                                            </div>
+                                        </div>
+
+                                    </v-card-text>
+
+                                </v-card>
+                            </v-dialog>
+
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <v-btn style="overflow: hidden; padding-top: 0; box-shadow: none !important;
+                                                    font-size: 16px !important;
+                                                    padding-top: 15px !important;
+                                                    background-color: rgb(170, 194, 127) !important;
+                                                    color: white !important;
+                                                    border-radius: 6px !important;
+                                                    margin-left: 10px;
+                                                    float:right" @click="addCustomerToSQL">
+                                <p>บันทึก</p>
+                            </v-btn>
+                        <v-text-field class="border-grey" hide-details single-line
+                                            outlined dense color="none"
+                                            placeholder="ยอมรวม"
+                                            style="padding-top: 0; margin-top: 0; width: 225px; background-color: #fafafa; font-size: 16px; float:right"
+                                            disabled>
+                                        </v-text-field>
+
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
-        </v-app>
+            <div :lazy="lazy" v-if="is_Customer_Active" v-model="is_Customer_Active" transition="fade-transition"
+                style=" padding: 50px 30px; font-family: 'Sarabun', sans-serif;">
+
+                <div class="row" style="height: 50px;">
+                    <div class="col-md-6 col-sm-4 col-xs-12">
+                        <h2>ข้อมูลลูกค้า</h2>
+                    </div>
+                    <div class="col-md-6 col-sm-8 col-xs-12">
+                        <v-text-field v-model="search" prepend-inner-icon="mdi-magnify"
+                            placeholder="ชื่อ-นามสกุล หรือเบอร์โทรศัพท์"
+                            single-line hide-details outlined dense
+                            style="margin-left: auto; padding-top: 0; margin-top: 0; width: 100%; background-color: white;"></v-text-field>
+                    </div>
+                </div>
+
+                <div class="row" style="width: 100%; margin-right: 0px; margin-top: 15px; padding-left: 12px;">
+                    <v-card
+                        style="width: 100%; padding: 0px; box-shadow: 0 0 10px rgba(0,0,0,.1); border-radius: 5px; padding-bottom: 10px;">
+                        <v-data-table class="black-table table-border" v-model="selected" :headers="customer_headers"
+                            :items="customer_item" :single-select="singleSelect" item-key="name" :search="search"
+                            :page.sync="page" :items-per-page="`${select.itemsPerPage}`" text-left
+                            hide-default-footer @page-count="pageCount = $event">
+                        </v-data-table>
+                        <div class="text-center pt-2">
+                            <v-pagination circle color="black" style="box-shadow: none" v-model="page"
+                                :length="pageCount"></v-pagination>
+                            <div style="float: right; position: absolute; right: 5px; bottom: -15px;">
+                                <p
+                                    style="float: left; position: absolute; right: 70px; white-space: nowrap; top: 10px;">
+                                    จำนวนรายการต่อหน้า</p>
+                                <v-select v-model="select" :items="items" item-text="itemsPerPage" label="Select"
+                                    return-object single-line text-left
+                                    style="width: 60px; float: left; padding-top: 0;"></v-select>
+                            </div>
+                        </div>
+                    </v-card>
+                </div>
+
+            </div>
+
+            <div class="row wrap col-md-12 col-lg-9 col-xl-8" :lazy="lazy" v-if="is_Deep_Overview_Active"
+                v-model="is_Deep_Overview_Active" transition="fade-transition"
+                style="padding-top: 55px; margin: 0 auto; padding: 55px 50px; font-family: 'Sarabun', sans-serif;">
+
+                <div class="col-lg-6">
+
+                <v-dialog v-model="details" max-width="500px" max-height="95vh">
+                                        <template v-slot:activator="{ on, attrs }">
+                                        <p style="margin-bottom: 15px; font-size: 25px">ภาพรวมอย่างละเอียด<v-btn icon v-bind="attrs" v-on="on"
+                                                style="margin-bottom: 8px; margin-right: 10px;">
+                                                <span
+                                                    style="width: 22.5px; height: 22.5px;background-color: #424143; color: #fff; border-radius: 10px; padding: 0 .4rem; font-size: 15px;">i</span>
+                                            </v-btn></p>
+
+                                        </template>
+                                        <v-card style="font-family: 'Sarabun', sans-serif;">
+                                            <v-card-title style="background-color: rgb(29, 134, 73); padding: 5px 8px;">
+                                                <p style="font-size: 16px; margin-bottom: 0px; color: white;">
+                                                    ภาพรวมอย่างละเอียด<span
+                                                        style="background-color: white; color:#08a7a3; border-radius: 10px; padding: 0 .6rem; margin-left: 2.5px">i</span></p>
+                                            </v-card-title>
+
+                                            <v-card-text
+                                                style=" color: black; padding: 30px 15px; font-size: 18px;">
+                                            <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                                                ภาพรวมอย่างละเอียดนี้ แสดงภาพรวมของร้านที่คุณกำลังเลือกอยู่ หากต้องการเลือกร้านอื่นๆ
+                                                ให้กดที่ชื่อ shop และเลือกร้านนั้นๆ หากต้องการ ร้านทั้งหมดให้เลือก ร้านทั้งหมด</p>
+
+                                            </v-card-text>
+
+                                            <v-card-actions class="flex justify-center"
+                                                style="border-top   : 1px solid rgba(0, 0, 0, .1);">
+                                                <v-btn outlined
+                                                    style="width: 90px; height: 38px ; padding-top: 15px; font-size: 15px; background-color: rgb(29, 134, 73); color: white;"
+                                                    @click="close">
+                                                    <p>ปิด</p>
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                    <v-card tile
+                        style="width: 100%; height: ; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div>
+                            <p
+                                style="font-size: 23px; padding: 15px; margin-bottom: 0; padding-bottom: 10px;text-align:center;">
+                                Item Quantities Graph</p>
+                            <ve-pie :data="quantitiesData" :settings="rosePie"></ve-pie>
+                        </div>
+                    </v-card>
+
+                    <v-card tile
+                        style="width: 100%; height: ; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div>
+                            <p
+                                style="font-size: 23px; padding: 15px; margin-bottom: 0; padding-bottom: 10px;text-align:center;">
+                                Item Price Graph</p>
+                            <ve-bar :data="priceData" :settings="barSetting"></ve-bar>
+                        </div>
+                    </v-card>
+
+
+                </div>
+                <div class="col-lg-6" style="padding-top: 72px">
+                <v-card tile
+                        style="width: 100%; height: ; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div>
+                            <p
+                                style="font-size: 23px; padding: 15px; margin-bottom: 0; padding-bottom: 10px;text-align:center;">
+                                Item Type Graph</p>
+                            <ve-pie :data="typeData"></ve-pie>
+                        </div>
+                    </v-card>
+
+                    <v-card tile
+                        style="width: 100%; height: ; margin-bottom: 25px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.2)">
+                        <div>
+                            <p
+                                style="font-size: 23px; padding: 15px; margin-bottom: 0; padding-bottom: 10px;text-align:center;">
+                                Item Weight Graph</p>
+                            <ve-bar :data="weightData"></ve-bar>
+                        </div>
+                    </v-card>
+
+                </div>
+            </div>
+
+        </div>
+
+    </v-app>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/pie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/bar.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <script>
         new Vue({
             el: "#app",
             vuetify: new Vuetify(),
             data: () => ({
+                rosePie:{
+                    roseType:'radius'
+                },
+                barSetting:{
+                    dimension:['name'],
+                    metrics:['price']
+                },
+                quantitiesData:{
+                    columns:['name', 'quantities'],
+                    rows:<?php getQuantity();?>
+                },
+                typeData:{
+                    columns:['type', 'quantities'],
+                    rows:<?php getItemType();?>
+                },
+                priceData:{
+                    columns:['name', 'price'],
+                    rows:<?php getPrice();?>
+                },
+                weightData:{
+                    columns:['name', 'weight'],
+                    rows:<?php getWeight();?>
+                },
                 tab: null,
                 lazy: false,
                 search: '',
                 dialog: false,
+                addItemWindow: false,
                 dialogDelete: false,
+                details:false,
+                description:false,
                 is_Overview_Active: false,
+                is_Deep_Overview_Active: true,
                 is_Manage_Product_Active: false,
                 is_Orders_Active: false,
-                is_Create_Orders_Active: true,
-
+                is_Create_Orders_Active: false,
+                is_Customer_Active: false,
+                item_name: '',
+                item_type: '',
+                item_price: '',
+                item_weight: '',
+                item_quantities: '',
+                gram_weight: '',
+                customer_name: '',
+                customer_contact: '',
+                customer_address: '',
+                customer_tel: '',
+                customer_tel_opt: '',
+                customer_province: '',
+                customer_district: '',
+                customer_subdistrict: '',
+                customer_postcode: '',
+                customer_sum_price: '',
                 page: 1,
                 pageCount: 0,
                 select: { itemsPerPage: 10, },
@@ -2032,32 +2201,18 @@
                 selected: [],
                 headers: [
                     {
-                        text: 'รูป',
+                        text: 'ID',
                         align: 'start',
-                        sortable: false,
                         filterable: false,
-                        value: 'photo',
+                        value: 'id',
                     },
                     { text: 'ชื่อ', value: 'name' },
-                    { text: 'รหัส SKU', value: 'code' },
                     { text: 'ราคา/บาท', value: 'price' },
                     { text: 'น้ำหนัก', value: 'weight', filterable: false, },
-                    { text: 'Tag', value: 'tag' },
-                    { text: 'จำนวน', value: 'amount', filterable: false, },
-                    { text: 'จอง', value: 'booking', filterable: false, },
+                    { text: 'ชนิด', value: 'type' },
+                    { text: 'จำนวน', value: 'quantities', filterable: false, },
                 ],
-                item: [
-                    {
-                        photo: 'eiei',
-                        name: 'หห',
-                        code: '#24383419308',
-                        price: 200,
-                        weight: 10,
-                        tag: 'Test',
-                        amount: 1,
-                        booking: 1,
-                    },
-                ],
+                item: <?php echo getItem();?>,
                 orders_headers: [
                     {
                         text: 'เลขออเดอร์',
@@ -2065,103 +2220,273 @@
                         sortable: false,
                         value: 'order_number',
                     },
-                    { text: 'เลขแทรคกิ้ง', value: 'tracking_number' },
+                    { text: 'เลขแทรคกิ้ง', value: 'track_number' },
                     { text: 'เบอร์โทร', value: 'phone_number' },
                     { text: 'ชื่อลูกค้า', value: 'customer_name' },
                     { text: 'ราคา', value: 'price', filterable: false, },
                     { text: 'การชำระเงิน', value: 'payment', filterable: false, },
                     { text: 'วันที่สร้าง', value: 'create_date', filterable: false, },
                 ],
-                orders_item: [
+            orders_item: <?php getOrder();?>,
+            create_orders_headers: [
+                {
+                    text: 'ชื่อสินค้า',
+                    align: 'center',
+                    value: 'item_name',
+                },
+                { text: 'จำนวน', align: 'center', value: 'quantity' },
+                { text: 'ราคา', align: 'center', value: 'price' },
+                { text: 'ชนิดสินค้า', align: 'center', value: 'type' },
+                { text: 'รวม', align: 'center', value: 'all_price' },
+                { text: 'ลบ', align: 'center', value: 'delete' },
+            ],
+            create_orders_item: [
+                {
+                    item_name: "หห",
+                    quantity: 1,
+                    type: 'asd',
+                    price: 201,
+                    all_price: 5,
+                },
+            ],
+            customer_headers: [
                     {
-                        order_number: "50873938",
-                        tracking_number: "111508739381",
-                        phone_number: "0838331888",
-                        customer_name: "ฟหกฟห",
-                        price: 201,
-                        payment: "COD",
-                        create_date: "16-11-2020 21:15:08",
+                        text: "ชื่อลูกค้า",
+                        align: 'start',
+                        value: 'customer_name',
                     },
+                    { text: 'เบอร์โทรศัพท์', value: 'customer_phone' },
+                    { text: 'ที่อยู่ลูกค้า', value: 'customer_address', filterable: false, },
+                    { text: 'ตำบล/แขวง', value: 'customer_district', filterable: false, },
+                    { text: 'อำเภอ/เขต', value: 'customer_sub_district', filterable: false, },
+                    { text: 'จังหวัด', value: 'customer_province', filterable: false, },
+                    { text: 'รหัสไปรษณีย์', value: 'customer_postcode', filterable: false, },
+
                 ],
-                create_orders_headers: [
-                    {
-                        text: 'ชื่อสินค้า',
-                        align: 'center',
-                        value: 'item_name',
-                    },
-                    { text: 'จำนวน', align: 'center', value: 'quantity' },
-                    { text: 'ราคา', align: 'center', value: 'price' },
-                    { text: 'ส่วนลด', align: 'center', value: 'discount' },
-                    { text: 'รวม', align: 'center', value: 'all_price' },
-                    { text: 'ลบ', align: 'center', value: 'delete' },
-                ],
-                create_orders_item: [
-                    {
-                        item_name: "หห",
-                        quantity: 1,
-                        price: 5,
-                        discount: 0,
-                        price: 201,
-                        all_price: 5,
-                    },
-                ],
-                tag_items: [],
-                price_items: ["เปลี่ยนได้", "เปลี่ยนไม่ได้"],
-                editedIndex: -1,
-                editedItem: {
-                    photo: '',
-                    name: '',
-                    code: '',
-                    price: 0,
-                    weight: 0,
-                    tag: '',
-                    amount: 0,
-                    booking: 0,
-                },
-                defaultItem: {
-                    photo: '',
-                    name: '',
-                    code: '',
-                    price: 0,
-                    weight: 0,
-                    tag: '',
-                    amount: 0,
-                    booking: 0,
-                },
-                customer_name_rules: [
-                    v => !!v || 'ยังไม่ได้กรอกชื่อลูกค้า',
-                ],
-            }),
-            methods: {
-                to_Overview() {
-                    this.is_Overview_Active = true;
-                    this.is_Manage_Product_Active = false;
-                    this.is_Orders_Active = false;
-                    this.is_Create_Orders_Active = false;
-                },
-                to_ManageProduct() {
-                    this.is_Overview_Active = false;
-                    this.is_Manage_Product_Active = true;
-                    this.is_Orders_Active = false;
-                    this.is_Create_Orders_Active = false;
-                },
-                to_Orders() {
-                    this.is_Overview_Active = false;
-                    this.is_Manage_Product_Active = false;
-                    this.is_Orders_Active = true;
-                    this.is_Create_Orders_Active = false;
-                },
-                to_Create_Orders() {
-                    this.is_Overview_Active = false;
-                    this.is_Manage_Product_Active = false;
-                    this.is_Orders_Active = false;
-                    this.is_Create_Orders_Active = true;
-                },
-                deleteItem(item) {
-                    this.create_orders_item.splice(this.create_orders_item.indexOf(item), 1)
-                },
+            customer_item: <?php getCustomer();?>,
+            tag_items: [],
+            price_items: ["เปลี่ยนได้", "เปลี่ยนไม่ได้"],
+            editedIndex: -1,
+            editedItem: {
+                photo: '',
+                name: '',
+                code: '',
+                price: 0,
+                weight: 0,
+                tag: '',
+                amount: 0,
+                booking: 0,
             },
-        });
+            defaultItem: {
+                photo: '',
+                name: '',
+                code: '',
+                price: 0,
+                weight: 0,
+                tag: '',
+                amount: 0,
+                booking: 0,
+            },
+            customer_name_rules: [
+                v => !!v || 'ยังไม่ได้กรอกชื่อลูกค้า',
+            ],
+        }),
+        components:{VePie, VeBar},
+            methods: {
+            to_Overview() {
+                this.is_Overview_Active = true;
+                this.is_Deep_Overview_Active = false;
+                this.is_Manage_Product_Active = false;
+                this.is_Orders_Active = false;
+                this.is_Create_Orders_Active = false;
+                this.is_Customer_Active = false;
+            },
+            to_Deep_Overview() {
+                this.is_Overview_Active = false;
+                this.is_Deep_Overview_Active = true;
+                this.is_Manage_Product_Active = false;
+                this.is_Orders_Active = false;
+                this.is_Create_Orders_Active = false;
+                this.is_Customer_Active = false;
+            },
+            to_ManageProduct() {
+                this.is_Overview_Active = false;
+                this.is_Deep_Overview_Active = false;
+                this.is_Manage_Product_Active = true;
+                this.is_Orders_Active = false;
+                this.is_Create_Orders_Active = false;
+                this.is_Customer_Active = false;
+            },
+            to_Orders() {
+                this.is_Overview_Active = false;
+                this.is_Deep_Overview_Active = false;
+                this.is_Manage_Product_Active = false;
+                this.is_Orders_Active = true;
+                this.is_Create_Orders_Active = false;
+                this.is_Customer_Active = false;
+            },
+            to_Create_Orders() {
+                this.is_Overview_Active = false;
+                this.is_Deep_Overview_Active = false;
+                this.is_Manage_Product_Active = false;
+                this.is_Orders_Active = false;
+                this.is_Create_Orders_Active = true;
+                this.is_Customer_Active = false;
+            },
+            to_Customer() {
+                this.is_Overview_Active = false;
+                this.is_Deep_Overview_Active = false;
+                this.is_Manage_Product_Active = false;
+                this.is_Orders_Active = false;
+                this.is_Create_Orders_Active = false;
+                this.is_Customer_Active = true;
+            },
+            deleteItem(item) {
+                this.create_orders_item.splice(this.create_orders_item.indexOf(item), 1)
+            },
+            convertWeight(){
+                this.item_weight = this.gram_weight / 1000;
+            },
+            close(){
+                if (this.dialog) {
+                    this.dialog = false;
+                }
+                else if (this.addItemWindow) {
+                    this.addItemWindow = false;
+                }
+                else if (this.details){
+                    this.details = false;
+                }
+                else if (this.description){
+                    this.description = false;
+                }
+                this.$nextTick(() => {
+                    this.editedItem = Object.assign({}, this.defaultItem);
+                    this.editedIndex = -1;
+                    this.item_weight = 0;
+                    this.item_price = 0;
+                    this.item_name = '';
+                    this.item_type = '';
+                    this.gram_weight = 0;
+                })
+            },
+            itemToFormData: function(e) {
+                let formdata = new FormData();
+                formdata.append('item_name', this.item_name);
+                formdata.append('item_type', this.item_type);
+                formdata.append('item_price', this.item_price);
+                formdata.append('item_weight', this.item_weight);
+                formdata.append('item_quantities', this.item_quantities);
+                return formdata;
+            },
+            randomOrderNumber(){
+                return Math.floor(Math.random() * 99999999) + 10000000;
+            },
+            randomTrackNumber(){
+                return Math.floor(Math.random() * 999999999999) + 100000000000;
+            },
+            getSumPrice(){
+                let sum = 0;
+                for (var i = 0; i < this.create_orders_item.length; i++) {
+                    sum += this.create_orders_item[i].all_price;
+                }
+                console.log(sum);
+                return sum;
+            },
+            orderToFormData: function(e) {
+                let formdata = new FormData();
+                formdata.append('order_number', this.randomOrderNumber());
+                formdata.append('track_number', this.randomTrackNumber());
+                formdata.append('contact', this.customer_contact);
+                formdata.append('telephone_opt', this.customer_tel_opt);
+                formdata.append('telephone', this.customer_tel);
+                formdata.append('name', this.customer_name);
+                formdata.append('price', this.getSumPrice());
+                formdata.append('method', "COD");
+                formdata.append('address', this.customer_address);
+                formdata.append('subdistrict', this.customer_subdistrict);
+                formdata.append('district', this.customer_district);
+                formdata.append('province', this.customer_province);
+                formdata.append('postcode', this.customer_postcode);
+                return formdata;
+
+            },
+            addItemToSQLL: function(e) {
+                e.preventDefault();
+                let item = this.itemToFormData();
+                const options = {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/form-data' },
+                    data: item,
+                    url: "assets/php/addItemToSQL.php",
+                };
+                axios(options).then(
+                    function (response) {
+                        if (response.data) {
+                            this.close();
+                            window.location.href = "user.php";
+
+                        }
+                    }
+                ).catch(err => console.log(err));
+            },
+            addItemToSQL: function(e) {
+                e.preventDefault();
+                let item = this.itemToFormData();
+                const options = {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/form-data' },
+                    data: item,
+                    url: "assets/php/addItemToSQL.php",
+                };
+                axios(options).then(
+                    function (response) {
+                        if (response.data) {
+                            this.close();
+                            window.location.href = "user.php";
+                        }
+                    }
+                ).catch(err => console.log(err));
+            },
+            addCustomerToSQL: function(e) {
+                e.preventDefault();
+                let customer = this.orderToFormData();
+                const options = {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/form-data' },
+                    data: customer,
+                    url: "assets/php/addCustomer.php",
+                };
+                axios(options).then(
+                    function (response) {
+                        if (response.data) {
+                            this.close();
+                            window.location.href = "user.php";
+                        }
+                    }
+                ).catch(err => console.log(err));
+
+            },
+            addItem: function(item) {
+                this.close();
+                console.log(item);
+                this.create_orders_item.push({
+                    item_name: item.name,
+                    quantity: 1,
+                    type: item.type,
+                    price: item.price,
+                    all_price: item.price,
+                });
+                console.log(item);
+            },
+            calculatePrice: function(item) {
+                item.all_price = item.quantity * item.price;
+            },
+            logout(){
+                window.location.href = "assets/php/logout.php";
+            }
+        }
+        })
     </script>
 </body>
 

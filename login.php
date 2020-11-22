@@ -1,7 +1,16 @@
+<?php
+session_start();
+if (isset($_SESSION['firstname'])){
+    echo '<script type="text/javascript">',
+     'window.location.href = "user.php"',
+     '</script>';
+}
+?>
 <!DOCTYPE html>
 <html>
-
 <head>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
@@ -92,7 +101,6 @@
 
     </style>
 </head>
-
 <body>
     <div id="app">
         <v-app id="inspire">
@@ -106,8 +114,8 @@
                 <v-tabs-items v-model="tab" class="tabs-item">
                     <v-tab-item>
                         <div class="col-md-12">
-                            <v-form ref="form" v-model="valid" lazy-validation method="post" action="assets/php/LoginTest.php">
-                                <v-text-field v-model="email" :rules="emailRules" color="red" name="login_email"required>
+                            <v-form ref="form" v-model="valid" lazy-validation id="login_form" @submit="sendForm">
+                                <v-text-field v-model="email" :rules="emailRules" color="red" name="login_email"required id="login_email">
                                     <template v-slot:label>
                                         <div style="font-weight: 300; font-size: 18px;">
                                           อีเมล
@@ -115,7 +123,7 @@
                                       </template>
                                 </v-text-field>
 
-                                <v-text-field v-model="password" :type="show1 ? 'text' : 'password'" :rules="passRules" name="login_pass" color="red" required style="margin-top: 10px;">
+                                <v-text-field v-model="password" :type="show1 ? 'text' : 'password'" :rules="passRules" name="login_pass" color="red" required style="margin-top: 10px;" id="login_pass">
                                     <template v-slot:label>
                                         <div style="font-weight: 300; font-size: 18px;">
                                           รหัสผ่าน
@@ -123,7 +131,7 @@
                                       </template>
                                 </v-text-field>
 
-                                <v-btn class="login_button" :disabled="!valid" fill-height class="mr-4" @click="validate" type="submit">
+                                <v-btn class="login_button" :disabled="!valid" fill-height class="mr-4" type="submit" id="submitbtn">
                                     <p class="bottom_button">LOG IN</p>
                                 </v-btn>
 
@@ -157,27 +165,27 @@
                     </v-tab-item>
                     <v-tab-item>
                         <div class="col-md-12">
-                            <v-form ref="register_form" v-model="valid" lazy-validation>
+                            <v-form ref="register_form" v-model="valid" lazy-validation @submit="sendRegis">
 
-                                <v-text-field v-model="register_username" color="red" label="Username" :rules="r_usernameRules" required></v-text-field>
+                                <v-text-field v-model="register_username" color="red" label="Username" :rules="r_usernameRules" name="r_username" required></v-text-field>
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <v-text-field v-model="register_firstname" color="red" label="ชื่อ"  :rules="r_firstnameRules" required></v-text-field>
+                                        <v-text-field v-model="register_firstname" color="red" label="ชื่อ"  :rules="r_firstnameRules" name="r_firstname" required></v-text-field>
                                     </div>
                                     <div class="col-md-6">
-                                        <v-text-field v-model="register_lastname" color="red" label="นามสกุล" :rules="r_lastnameRules" required></v-text-field>
+                                        <v-text-field v-model="register_lastname" color="red" label="นามสกุล" :rules="r_lastnameRules" name="r_lastname" required></v-text-field>
                                     </div>
                                 </div>
 
-                                <v-text-field v-model="register_telephone" color="red" label="เบอร์โทรศัพท์" :rules="r_telRules" required></v-text-field>
+                                <v-text-field v-model="register_telephone" color="red" label="เบอร์โทรศัพท์" :rules="r_telRules" name="r_tel" required></v-text-field>
 
-                                <v-text-field v-model="register_email" color="red" label="อีเมล" :rules="r_emailRules" required></v-text-field>
+                                <v-text-field v-model="register_email" color="red" label="อีเมล" :rules="r_emailRules" name="r_email" required></v-text-field>
 
-                                <v-text-field v-model="register_password" color="red" label="รหัสผ่าน" :rules="r_passRules" :type="show1 ? 'text' : 'password'" required></v-text-field>
+                                <v-text-field v-model="register_password" color="red" label="รหัสผ่าน" :rules="r_passRules" :type="show1 ? 'text' : 'password'" name="r_password" required></v-text-field>
 
-                                <v-btn :disabled="!valid" fill-height color="success" class="mr-4" @click="signup_validate"
-                                    style="width: 100% ; margin-top: 20px; height: 40px;">
+                                <v-btn :disabled="!valid" fill-height color="success" class="mr-4"
+                                    style="width: 100% ; margin-top: 20px; height: 40px;" type="submit">
                                     <p class="bottom_button">SIGN UP</p>
                                 </v-btn>
 
@@ -197,6 +205,7 @@
             vuetify: new Vuetify(),
             data() {
                 return {
+                    check: false,
                     tab: null,
                     valid: true,
                     show1: false,
@@ -253,7 +262,67 @@
                 signup_validate(){
                     this.$refs.register_form.validate()
                     console.log(this.register_username)
-                }
+                },
+                checkAcct:function(e){
+                    e.preventDefault();
+                    console.log("fucntion called");
+                    var request = this.$http.get("/assets/php/LoginTest.php",
+                    function(data, status, request){
+                        console.log(data);
+                    })
+                },
+                RegistoFormData:function(){
+                    let formdata = new FormData();
+                    formdata.append("r_username", this.register_username);
+                    formdata.append("r_firstname", this.register_firstname);
+                    formdata.append("r_lastname", this.register_lastname);
+                    formdata.append("r_email", this.register_email);
+                    formdata.append("r_password", this.register_password);
+                    formdata.append("r_tel", this.register_telephone);
+                    return formdata;
+                },
+                toFormData:function(){
+                    let formdata = new FormData();
+                    formdata.append("email", this.email);
+                    formdata.append("password", this.password);
+                    return formdata;
+                },
+                sendForm:function(e){
+                    e.preventDefault();
+                    let account = this.toFormData();
+                    const options = {
+                        method:'POST',
+                        headers:{'content-type':'application/form-data'},
+                        data:account,
+                        url:"assets/php/LoginTest.php",
+                    };
+                    axios(options).then(
+                        function(response){
+                            if (response.data){
+                                window.location.href = "user.php";
+                            }
+                        }
+                    ).catch(err => console.log(err));
+                },
+                sendRegis:function(e){
+                    e.preventDefault();
+                    let account = this.RegistoFormData();
+                    const options = {
+                        method:'POST',
+                        headers:{'content-type':'application/form-data'},
+                        data:account,
+                        url:"assets/php/register.php",
+                    };
+                    axios(options).then(
+                        function(response){
+                            if (response.data){
+                                window.location.href = "login.php";
+                                console.log(response.data)
+                            }
+                        }
+                    ).catch(err => console.log(err));
+                },
+
             },
         });
 
