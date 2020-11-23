@@ -129,6 +129,7 @@ function getPrice(){
 function getWeight(){
     $acct = $GLOBALS['acct'];
     $result = $acct->getAllItem();
+    $count = 1;
     if($result){
         $item = array();
         while ($row = $result->fetch_assoc()){
@@ -165,6 +166,9 @@ function getWeight(){
         href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
 
     <style>
         * {
@@ -1301,7 +1305,7 @@ function getWeight(){
                     <div class="row" style="padding-left: 10px;">
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="selectedBankImageIcon d-flex justify-center">
+                            <div class="selectedBankImageIcon d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4i
                                 xAAAABHNCSVQICAgIfAhkiAAABPNJREFUaIHdmX9M1GUcx1/PcWog4mSSSgUjjbmJNKwhujox
                                 58rMlpllzGWZa7q2fqyVU+GfBMu1mltsVqtGokWjUpnTipU/Wv4IcXLiAY1EMUV+BB4gO064p
@@ -1333,7 +1337,7 @@ function getWeight(){
                         </div>
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="NonSelectedBankDiv d-flex justify-center">
+                            <div class="NonSelectedBankDiv d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ix
                                 AAAABHNCSVQICAgIfAhkiAAAA0NJREFUaIHtmV1IU2EYx//PuxNW2yozXV2UVmIfmJFELi+kSNQi
                                 qIsy0yCIIN2qiwq86EqCrrowqll0lflRCEUZpZYgEgkRIpaWFkpG6KaW+TFNc08XJc3c5tzH2Zns
@@ -1357,7 +1361,7 @@ function getWeight(){
                         </div>
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="NonSelectedBankDiv d-flex justify-center">
+                            <div class="NonSelectedBankDiv d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP
                                 4ixAAAABHNCSVQICAgIfAhkiAAABstJREFUaIHVmntQlNcZh5/z7XIRgcWFgCUKSgIhtQ1FnII
                                 4KGqblomDSZOmHe00lammMUmn6VSd2NRJE9uJ6fRubIyZYu9G7UySlpqYeolJBFSI1E60EsQLcl1
@@ -1397,7 +1401,7 @@ function getWeight(){
                         </div>
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="NonSelectedBankDiv d-flex justify-center">
+                            <div class="NonSelectedBankDiv d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixA
                                 AAABHNCSVQICAgIfAhkiAAABHVJREFUaIHdmX9M1GUcx1/P9w6E44cEAgXVpRgbUi7cqhOYqMll5T
                                 9qrs0QZmvL/rBprdxaWz/XD/ujtSxrsymYf9jcTFYjEYzAiUkRQ0AywYAuEhBQBIU77ukPAiXuiO/
@@ -1426,7 +1430,7 @@ function getWeight(){
                         </div>
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="NonSelectedBankDiv d-flex justify-center">
+                            <div class="NonSelectedBankDiv d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ix
                                 AAAABHNCSVQICAgIfAhkiAAADzVJREFUaIG9mnuwX1V1xz9r7X1+93dzc29yQ4KBQAIJIUiREAVEq
                                 yhY7VSn2gfq4DiOSnVaWxRxajtSaR1n6pSHwIDVcWypM04LIxoV6UMYiw+KAYHaxgcCARIS8oIkN7
@@ -1502,7 +1506,7 @@ function getWeight(){
                         </div>
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="NonSelectedBankDiv d-flex justify-center">
+                            <div class="NonSelectedBankDiv d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAA
                                 ABHNCSVQICAgIfAhkiAAACGNJREFUaIHdmWtQlNcZx3/n3Qt3QVAXFeRWUSNe8AKIYrxkIlpNE422y
                                 XTaiDBjO+1kmtRx2iaZ9EMn006mdZJpUxUx0yZe0SjaZqITo6AmUUwWULwLqFwiUS4Cyy677+kH5N1dF
@@ -1547,7 +1551,7 @@ function getWeight(){
                         </div>
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="NonSelectedBankDiv d-flex justify-center">
+                            <div class="NonSelectedBankDiv d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAA
                                 BHNCSVQICAgIfAhkiAAAAgpJREFUaIHtmr9rE2EYxz/PS3Tp0q1dJOjgJGq7eDoEN6Wc7S5Cgzi0W7f+
                                 G910s/74A2yS7pJBoWA5Yi24WBChdlKhdRC5x+ESPS4XvPRM37fx/UDg3ofvcd8PL+Hg7oQBaIMQ4Row2
@@ -1564,7 +1568,7 @@ function getWeight(){
                         </div>
 
                         <div class="col-xs-3 col-md-2 col-lg-1">
-                            <div class="NonSelectedBankDiv d-flex justify-center">
+                            <div class="NonSelectedBankDiv d-flex justify-center icon" onclick="changeIconBorder(this)">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAA
                                 BHNCSVQICAgIfAhkiAAACVBJREFUaIHNmWuMXVUVx39r73PvnZnO0JcpLRSYTh9CERuLhlJjAQkiKekXa
                                 YeIJIIE8YPyyRCVEDX6wUS/SdAPio8gFGJCABECMdra0vBKHxkeOgyP2gfQ50xn7uOcvZYfzp079z13huH
@@ -1684,7 +1688,7 @@ function getWeight(){
                                 <b>ตำบล / แขวง</b></p>
                             <v-text-field class="border-grey" single-line outlined color="none"
                                 style="padding-top: 0; margin-top: 0; width: 100%; background-color: #fafafa; font-size: 18px;"
-                                v-model="customer_subdistrict" @keyup="test">
+                                v-model="customer_subdistrict">
                             </v-text-field>
                         </div>
 
@@ -2166,8 +2170,8 @@ function getWeight(){
                 dialogDelete: false,
                 details:false,
                 description:false,
-                is_Overview_Active: false,
-                is_Deep_Overview_Active: true,
+                is_Overview_Active: true,
+                is_Deep_Overview_Active: false,
                 is_Manage_Product_Active: false,
                 is_Orders_Active: false,
                 is_Create_Orders_Active: false,
@@ -2241,13 +2245,7 @@ function getWeight(){
                 { text: 'ลบ', align: 'center', value: 'delete' },
             ],
             create_orders_item: [
-                {
-                    item_name: "หห",
-                    quantity: 1,
-                    type: 'asd',
-                    price: 201,
-                    all_price: 5,
-                },
+
             ],
             customer_headers: [
                     {
@@ -2484,9 +2482,18 @@ function getWeight(){
             },
             logout(){
                 window.location.href = "assets/php/logout.php";
-            }
+            },
         }
         })
+    </script>
+    <script>
+        function changeIconBorder(element){
+            $(".icon").removeClass("selectedBankImageIcon");
+            $(".icon").addClass("NonSelectedBankDiv");
+            $(element).removeClass("NonSelectedBankDiv");
+            $(element).addClass("selectedBankImageIcon");
+            console.log("test");
+        }
     </script>
 </body>
 
