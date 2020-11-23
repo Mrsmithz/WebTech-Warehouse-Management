@@ -106,15 +106,18 @@ if (isset($_SESSION['firstname'])){
         <v-app id="inspire">
             <img style="width: 228px; margin: 0 auto;" src="img/Login/icon.png">
             <v-card class="mx-auto card-main" style="width: 440px; margin-top: 28px;">
-                <v-tabs background-color="grey lighten-5" light v-model="tab" >
+                <v-tabs background-color="grey lighten-5" light v-model="active_tab" >
                     <v-tabs-slider color="#1d8649"></v-tabs-slider>
-                    <v-tab class="tabs">เข้าสู่ระบบ</v-tab>
-                    <v-tab class="tabs">สมัครสมาชิก</v-tab>
+                    <!-- <v-tab class="tabs">เข้าสู่ระบบ</v-tab>
+                    <v-tab class="tabs">สมัครสมาชิก</v-tab> -->
+                    <v-tab v-for="tab of tabs" :key="tab.id" class="tabs">
+                        {{tab.name}}
+                    </v-tab>
                 </v-tabs>
-                <v-tabs-items v-model="tab" class="tabs-item">
+                <v-tabs-items v-model="active_tab" class="tabs-item">
                     <v-tab-item>
                         <div class="col-md-12">
-                            <v-form ref="form" v-model="valid" lazy-validation id="login_form" @submit="sendForm">
+                            <v-form ref="form" v-model="login" lazy-validation id="login_form" @submit="sendForm">
                                 <v-text-field v-model="email" :rules="emailRules" color="red" name="login_email"required id="login_email">
                                     <template v-slot:label>
                                         <div style="font-weight: 300; font-size: 18px;">
@@ -136,7 +139,7 @@ if (isset($_SESSION['firstname'])){
                                 </v-btn>
 
                                 <v-btn color="blue darken-2"
-                                    class=" white--text bottom_button other_button" @click="" style="padding-left: 20px">
+                                    class=" white--text bottom_button other_button" @click="checkStatus" style="padding-left: 20px">
                                     <i class="v-icon v-icon--left fa fa-facebook" aria-hidden="true" style="font-size: 22px;"></i>
                                     <p class="bottom_button">CONTINUE WITH FACEBOOK</p>
                                 </v-btn>
@@ -165,7 +168,7 @@ if (isset($_SESSION['firstname'])){
                     </v-tab-item>
                     <v-tab-item>
                         <div class="col-md-12">
-                            <v-form ref="register_form" v-model="valid" lazy-validation @submit="sendRegis">
+                            <v-form ref="register_form" v-model="register" lazy-validation @submit="sendRegis">
 
                                 <v-text-field v-model="register_username" color="red" label="Username" :rules="r_usernameRules" name="r_username" required></v-text-field>
 
@@ -205,8 +208,14 @@ if (isset($_SESSION['firstname'])){
             vuetify: new Vuetify(),
             data() {
                 return {
+                    register:true,
+                    login:false,
                     check: false,
-                    tab: null,
+                    active_tab: this.checkStatus(),
+                    tabs:[
+                        {id:1, name:'เข้าสู่ระบบ'},
+                        {id:2, name:'สมัครสมาชิก'}
+                    ],
                     valid: true,
                     show1: false,
                     items: ["One", "Two"],
@@ -224,37 +233,46 @@ if (isset($_SESSION['firstname'])){
                     ],
                     register_username: '',
                     r_usernameRules:[
-                        v => !!v || 'enter username',
-                        v => (v && v.length >= 6 && /[a-zA-Z0-9]+/.test(v)) || 'username must be at least 6 characters'
+                        v => !!v || 'กรุณากรอกชื่อผู้ใช้',
+                        v => (v && v.length >= 6 && /[a-zA-Z0-9]+/.test(v)) || 'ชื่อผู้ใช้ต้องมีตัวอักษรอย่างน้อย 6 ตัว'
                     ],
                     register_firstname: '',
                     r_firstnameRules:[
-                        v => !!v || 'enter firstname',
-                        v => (v && v.length >= 4 && /^[a-zA-Zก-ฮ]+/.test(v)) || 'invalid firstname'
+                        v => !!v || 'กรุณากรอกชื่อ',
+                        v => (v && v.length >= 4 && /^[a-zA-Zก-ฮ]+/.test(v)) || 'กรุณากรอกชื่อให้ถูกต้่อง'
                     ],
                     register_lastname: '',
                     r_lastnameRules:[
-                        v => !!v || 'enter lastname',
-                        v => (v && v.length >= 4 && /^[a-zA-Zก-ฮ]+/.test(v)) || 'invalid lastname'
+                        v => !!v || 'กรุณากรอกนามสกุล',
+                        v => (v && v.length >= 4 && /^[a-zA-Zก-ฮ]+/.test(v)) || 'กรุณากรอกนามสกุลให้ถูกต้อง'
                     ],
                     register_telephone: '',
                     r_telRules:[
-                        v => !!v || 'enter telephone',
-                        v => (v && v.length == 10 && /^0[0-9]{9}/.test(v)) || 'invalid telephone'
+                        v => !!v || 'กรุณากรอกหมายเลขโทรศัทพ์',
+                        v => (v && v.length == 10 && /^0[0-9]{9}/.test(v)) || 'กรุณากรอกหมายเลขโทรศัพท์ให้ถูกต้อง'
                     ],
                     register_email: '',
                     r_emailRules:[
-                        v => !!v || 'enter email',
-                        v => (v && /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v)) || 'invalid email'
+                        v => !!v || 'กรุณากรอกอีเมลล์',
+                        v => (v && /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v)) || 'กรุณากรอกอีเมลล์ให้ถูกต้อง'
                     ],
                     register_password: '',
                     r_passRules:[
-                        v => !!v || 'enter password',
-                        v => (v && v.length >= 8 && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(v)) || 'invalid password'
+                        v => !!v || 'กรุณากรอกรหัสผ่าน',
+                        v => (v && v.length >= 8 && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(v)) || 'รหัสผ่านต้องประกอบด้้วย อักษรตัวใหญ่ อักษรตัวเล็ก ตัวเลข อักษรพิเศษ และต้องมีความยาวอย่างน้อย 8 ตัว'
                     ],
                 };
             },
             methods: {
+                checkStatus(){
+                    let val = localStorage.getItem('status');
+                    if (val == "login"){
+                        return 0;
+                    }
+                    else if (val == "register"){
+                        return 1;
+                    }
+                },
                 validate() {
                     this.$refs.form.validate()
                     console.log(this.password)
@@ -325,7 +343,6 @@ if (isset($_SESSION['firstname'])){
 
             },
         });
-
     </script>
 </body>
 
